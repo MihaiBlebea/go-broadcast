@@ -1,0 +1,10 @@
+@host=192.168.50.11:30011
+
+POST http://{{host}}/hello
+Content-Type: application/json
+
+{
+    "name": "Mihai",
+    "age": 30,
+    "template": "Hello! My name is %s and I am %d yo"
+}
