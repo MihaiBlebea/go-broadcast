@@ -1,0 +1,37 @@
+version: "3.7"
+
+services:
+    # hello:
+    #     build: ./../../application
+    #     image: serbanblebea/go-broadcast:v0.1
+    #     container_name: hello
+    #     ports:
+    #         - 8099:8099
+    #     environment:
+    #         HTTP_PORT: 8099
+    #     restart: on-failure
+    blog:
+        build: ./../../blog
+        image: serbanblebea/go-blog:v0.1
+        container_name: blog
+        ports:
+            - 8088:8088
+        environment:
+            HTTP_PORT: 8088
+        restart: on-failure
+    gitlab:
+        image: gitlab/gitlab-ce
+        container_name: gitlab
+        ports:
+            - 8443:443
+            - 8080:80
+        restart: always
+        hostname: 'gitlab.example.com'
+        environment:
+            GITLAB_OMNIBUS_CONFIG: |
+                external_url 'http://gitlab.example.com'
+                # Add any other gitlab.rb configuration here, each on its own line
+        volumes:
+            - '$GITLAB_HOME/config:/etc/gitlab'
+            - '$GITLAB_HOME/logs:/var/log/gitlab'
+            - '$GITLAB_HOME/data:/var/opt/gitlab'

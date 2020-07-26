@@ -4,7 +4,16 @@ POST http://{{host}}/hello
 Content-Type: application/json
 
 {
-    "name": "Mihai",
+    "name": "Serban",
     "age": 30,
     "template": "Hello! My name is %s and I am %d yo"
 }
+
+###
+
+GET http://{{host}}/
+
+
+###
+
+GET http://{{host}}/article/hello-world

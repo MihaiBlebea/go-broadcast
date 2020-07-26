@@ -1,3 +1,6 @@
+DOCKER_PATH := ./deploy/local-blog
+TERRAFORM_PATH := ./deploy/terraform
+
 local:
 	export HTTP_PORT=8099 && \
 	cd ./application && \
@@ -8,27 +11,30 @@ local:
 build-up: build up
 
 build:
-	cd ./deploy/local-go-broadcast && docker-compose build --no-cache
+	cd $(DOCKER_PATH) && docker-compose build --no-cache
 
 up:
-	cd ./deploy/local-go-broadcast && docker-compose up -d
+	cd $(DOCKER_PATH) && docker-compose up -d
 
 down:
-	cd ./deploy/local-go-broadcast && docker-compose down
+	cd $(DOCKER_PATH) && docker-compose down
 
 push:
-	cd ./deploy/local-go-broadcast && docker-compose push
+	cd $(DOCKER_PATH) && docker-compose push
 
 # Terraform scripts
 
 tf-init:
-	cd ./deploy/terraform && terraform init
+	cd $(TERRAFORM_PATH) && terraform init
 
 tf-plan:
-	cd ./deploy/terraform && terraform plan
+	cd $(TERRAFORM_PATH) && terraform plan
 
 tf-apply:
-	cd ./deploy/terraform && terraform apply
+	cd $(TERRAFORM_PATH) && terraform apply
+
+tf-destroy:
+	cd $(TERRAFORM_PATH) && terraform destroy
 
 terraform: tf-init tf-plan tf-apply
 

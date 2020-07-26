@@ -3,18 +3,26 @@ provider "kubernetes" {
     config_path = "/Users/mihaiblebea/.kube/config"
 }
 
-resource "kubernetes_namespace" "dev" {
+variable "http_port" {
+    description = "http port for exposing the blog server"
+    type = string
+
+    default = "8088"
+}
+
+resource "kubernetes_namespace" "mihaiblebea" {
     metadata {
-        name = "dev"
+        name = "mihaiblebea"
     }
 }
 
-resource "kubernetes_deployment" "hello-deployment" {
+resource "kubernetes_deployment" "blog-deployment" {
     metadata {
-        name = "hello-deployment"
+        name = "blog-deployment"
+        namespace = "mihaiblebea"
         labels = {
             app = "go-broadcast"
-            name = "hello-deployment"
+            name = "blog-deployment"
         }
     }
 
@@ -24,29 +32,29 @@ resource "kubernetes_deployment" "hello-deployment" {
         selector {
             match_labels = {
                 app = "go-broadcast"
-                name = "hello-world-app"
+                name = "blog-pod"
             }
         }
 
         template {
             metadata {
-                name = "hello-world-app"
+                name = "blog-pod"
                 labels = {
                     app = "go-broadcast"
-                    name = "hello-world-app"
+                    name = "blog-pod"
                 }
             }
 
             spec {
                 container {
-                    image = "serbanblebea/go-broadcast:v0.1"
-                    name = "hello-world-pod"
+                    image = "serbanblebea/go-blog:v0.1"
+                    name = "blog-container"
                     env {
                         name = "HTTP_PORT"
-                        value = 8099
+                        value = var.http_port
                     }
                     port {
-                        container_port = 8099
+                        container_port = var.http_port
                     }
                 }
             }
@@ -54,22 +62,27 @@ resource "kubernetes_deployment" "hello-deployment" {
     }
 }
 
-resource "kubernetes_service" "hello-service" {
+resource "kubernetes_service" "blog-service" {
     metadata {
-        name = "hello-world-service"
+        name = "blog-service"
+        namespace = "mihaiblebea"
     }
 
     spec {
         selector = {
-            name = "hello-world-app"
+            name = "blog-pod"
         }
 
         port {
             port = 80
-            target_port = 8099
+            target_port = var.http_port
             node_port = 30011
         }
 
         type = "NodePort"
     }
+}
+
+output "browser_base_url" {
+    value = "${kubernetes_service.blog-service}"
 }
