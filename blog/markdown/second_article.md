@@ -1,12 +1,13 @@
 ---
 Title: Second article
 Summary: This is the second article
+Image: https://yourbasic.org/golang/square-gopher.png
 Tags:
     - markdown
     - goldmark
 Layout: article
 Slug: second-article
-IsArticle: true
+Published: "2020-07-24"
 ---
 # Comply Advantage webhook MS
 

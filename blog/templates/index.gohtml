@@ -13,7 +13,11 @@
                 <h1>This is the {{ .Title }} page</h1>
 
                 {{ range $article := .Articles }}
-                    <h4>{{ $article.Slug }}</h4>
+
+                    <div class="mb-3 mb-md-4">
+                        {{ template "card_article" $article }}
+                    </div>
+
                 {{ end }}
             </div>
         </div>

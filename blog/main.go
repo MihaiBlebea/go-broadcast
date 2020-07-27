@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 
@@ -27,7 +26,6 @@ func main() {
 
 	for _, page := range pages {
 		cache.StorePage(page.Slug, page)
-		fmt.Println(cache)
 	}
 
 	service := page.New(markdown, cache, logger)
@@ -35,7 +33,7 @@ func main() {
 	server := api.NewHTTPServer(service, logger)
 
 	httpPort := fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))
-	log.Println("Application started HTTP server on port " + httpPort)
+	logger.Info(fmt.Sprintf("Application started HTTP server on port %s", httpPort))
 
 	err = http.ListenAndServe(httpPort, server.GetHandler())
 	if err != nil {

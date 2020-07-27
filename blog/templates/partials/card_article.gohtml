@@ -1,0 +1,12 @@
+{{ define "card_article" }}
+<div class="card">
+    <a href="/article/{{ .Slug }}">
+        <img src="{{ .Image }}" class="card-img-top" alt="...">
+    </a>
+    <div class="card-body">
+        <h5 class="card-title">{{ .Title }}</h5>
+        <p class="card-text">{{ .Summary }}</p>
+        <a href="/article/{{ .Slug }}" class="btn btn-primary">Read more</a>
+    </div>
+</div>
+{{ end }}

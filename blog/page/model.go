@@ -11,6 +11,7 @@ type Page struct {
 	HTML      template.HTML
 	Params    interface{}
 	MetaTitle string
+	Image     string
 	Title     string
 	Slug      string
 	Summary   string

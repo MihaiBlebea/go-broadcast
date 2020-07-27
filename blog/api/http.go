@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -62,7 +61,6 @@ func (h *httpServer) BlogHandler(w http.ResponseWriter, r *http.Request) {
 
 	page, err := h.pageService.LoadBlogPage("/", nil)
 	if err != nil {
-		log.Fatal(err)
 		page, _ = h.pageService.LoadPage("/error", nil)
 		page.Render(w)
 		return

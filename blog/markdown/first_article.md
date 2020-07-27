@@ -1,12 +1,13 @@
 ---
 Title: goldmark-meta
 Summary: Add YAML metadata to the document
+Image: https://yourbasic.org/golang/square-gopher.png
 Tags:
     - markdown
     - goldmark
 Layout: article
 Slug: first-article
-IsArticle: true
+Published: "2020-07-28"
 ---
 # Comply Advantage webhook MS
 

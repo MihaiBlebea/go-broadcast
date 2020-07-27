@@ -3,12 +3,6 @@ provider "kubernetes" {
     config_path = "/Users/mihaiblebea/.kube/config"
 }
 
-variable "http_port" {
-    description = "http port for exposing the blog server"
-    type = string
-
-    default = "8088"
-}
 
 resource "kubernetes_namespace" "mihaiblebea" {
     metadata {
@@ -47,7 +41,7 @@ resource "kubernetes_deployment" "blog-deployment" {
 
             spec {
                 container {
-                    image = "serbanblebea/go-blog:v0.1"
+                    image = var.blog_image
                     name = "blog-container"
                     env {
                         name = "HTTP_PORT"
@@ -76,13 +70,20 @@ resource "kubernetes_service" "blog-service" {
         port {
             port = 80
             target_port = var.http_port
-            node_port = 30011
+            node_port = var.node_port
         }
 
         type = "NodePort"
     }
 }
 
-output "browser_base_url" {
-    value = "${kubernetes_service.blog-service}"
+resource "kubernetes_secret" "user_password" {
+    metadata {
+        name = "user-password"
+        namespace = "mihaiblebea"
+    }
+
+    data = {
+        password = file("${path.cwd}/secrets/password.txt")
+    }
 }
