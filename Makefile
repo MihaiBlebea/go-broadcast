@@ -31,10 +31,13 @@ tf-plan:
 	cd $(TERRAFORM_PATH) && terraform plan
 
 tf-apply:
-	cd $(TERRAFORM_PATH) && terraform apply
+	cd $(TERRAFORM_PATH) && terraform apply -auto-approve
 
 tf-destroy:
 	cd $(TERRAFORM_PATH) && terraform destroy
+
+tf-get:
+	cd $(TERRAFORM_PATH) && terraform get
 
 terraform: tf-init tf-plan tf-apply
 

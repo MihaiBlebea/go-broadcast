@@ -10,6 +10,16 @@ resource "kubernetes_namespace" "mihaiblebea" {
     }
 }
 
+resource "kubernetes_namespace" "ingress-nginx" {
+    metadata {
+        name = "ingress-nginx"
+    }
+}
+
+module "nginx_ingress_controller" {
+    source = "./modules/nginx-ingress-controller"
+}
+
 resource "kubernetes_deployment" "blog-deployment" {
     metadata {
         name = "blog-deployment"
@@ -56,7 +66,7 @@ resource "kubernetes_deployment" "blog-deployment" {
     }
 }
 
-resource "kubernetes_service" "blog-service" {
+resource "kubernetes_service" "blog_node_port" {
     metadata {
         name = "blog-service"
         namespace = "mihaiblebea"
@@ -77,6 +87,26 @@ resource "kubernetes_service" "blog-service" {
     }
 }
 
+resource "kubernetes_service" "blog_cluster_ip" {
+    metadata {
+        name = "blog-service-cluster"
+        namespace = "mihaiblebea"
+    }
+
+    spec {
+        selector = {
+            name = "blog-pod"
+        }
+
+        port {
+            port = 80
+            target_port = var.http_port
+        }
+
+        type = "ClusterIP"
+    }
+}
+
 resource "kubernetes_secret" "user_password" {
     metadata {
         name = "user-password"
@@ -85,5 +115,35 @@ resource "kubernetes_secret" "user_password" {
 
     data = {
         password = file("${path.cwd}/secrets/password.txt")
+    }
+}
+
+resource "kubernetes_ingress" "blog-ingress" {
+    metadata {
+        name = "blog-ingress"
+        namespace = "mihaiblebea"
+        annotations = {
+            "nginx.ingress.kubernetes.io/proxy-body-size" = "20m"
+            "kubernetes.io/ingress.class" = "nginx"
+            "nginx.ingress.kubernetes.io/rewrite-target" = "/$2"
+        }
+    }
+
+    spec {
+
+        rule {
+            host = "mihaiblebea.com"
+
+            http {
+                path {
+                    path = "/app1/(/|$)(.*)"
+
+                    backend {
+                        service_name = "blog-service-cluster"
+                        service_port = 80
+                    }
+                }
+            }
+        }
     }
 }

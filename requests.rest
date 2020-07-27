@@ -16,4 +16,4 @@ GET http://{{host}}/
 
 ###
 
-GET http://{{host}}/article/hello-world
+GET http://{{host}}/article/first-article
