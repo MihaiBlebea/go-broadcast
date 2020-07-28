@@ -1,5 +1,6 @@
 DOCKER_PATH := ./deploy/local-blog
 TERRAFORM_PATH := ./deploy/terraform
+HELM_PATH := ./deploy/broadcast
 
 local:
 	export HTTP_PORT=8099 && \
@@ -41,3 +42,7 @@ tf-get:
 
 terraform: tf-init tf-plan tf-apply
 
+# Helm scripts
+
+helm-debug:
+	cd $(HELM_PATH) && helm install --generate-name --debug --dry-run .

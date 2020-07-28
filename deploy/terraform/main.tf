@@ -16,10 +16,6 @@ resource "kubernetes_namespace" "ingress-nginx" {
     }
 }
 
-module "nginx_ingress_controller" {
-    source = "./modules/nginx-ingress-controller"
-}
-
 resource "kubernetes_deployment" "blog-deployment" {
     metadata {
         name = "blog-deployment"
