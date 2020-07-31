@@ -1,3 +1,4 @@
 deploy/terraform/.terraform
 deploy/terraform/*.tfstate
 deploy/terraform/*.tfstate.backup
+deploy/terraform/secrets
