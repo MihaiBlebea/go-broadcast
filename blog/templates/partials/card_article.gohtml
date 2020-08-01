@@ -4,9 +4,11 @@
         <img src="{{ .Image }}" class="card-img-top" alt="...">
     </a>
     <div class="card-body">
-        <h5 class="card-title">{{ .Title }}</h5>
-        <p class="card-text">{{ .Summary }}</p>
-        <a href="/article/{{ .Slug }}" class="btn btn-primary">Read more</a>
+        <h5 class="card-title"><strong>{{ .Title }}</strong></h5>
+        <p class="card-text">
+            {{ .Summary }}... 
+            <a href="/article/{{ .Slug }}">Read more</a>
+        </p>
     </div>
 </div>
 {{ end }}

@@ -1,8 +1,8 @@
 
 module "digital_ocean" {
-    source = "./modules/digital_ocean"
+    source          = "./modules/digital_ocean"
 
-    do_token        = "37e43fa89c6321a7952a7ceade620ac11b007604d112a9b21e71687fb3578265"
+    do_token        = ""
     loadbalancer_ip = module.helm.loadbalancer_ip.load_balancer_ingress[0].ip
 }
 
@@ -15,8 +15,9 @@ module "helm" {
 }
 
 module "kubernetes" {
-    source = "./modules/kubernetes"
+    source                 = "./modules/kubernetes"
 
+    blog_image             = "serbanblebea/go-blog:v0.3"
     kubernetes_host        = module.digital_ocean.kubernetes_host
     kubernetes_token       = module.digital_ocean.kubernetes_token
     cluster_ca_certificate = module.digital_ocean.cluster_ca_certificate

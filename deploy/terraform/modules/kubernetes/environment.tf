@@ -21,6 +21,4 @@ variable "node_port" {
 variable "blog_image" {
     description = "docker image for the blog container"
     type = string
-
-    default = "serbanblebea/go-blog:v0.2"
 }
