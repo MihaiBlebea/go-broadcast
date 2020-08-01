@@ -2,7 +2,7 @@
 <head>
     <title>{{ .MetaTitle }}</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    {{ template "head" }}
 </head>
 <body>
     {{ template "navbar" }}
@@ -10,6 +10,8 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                <h1 class="mb-3 text-center">{{ .Title }}</h1>
+                <img class="mb-3" src="{{ .Image }}" />
                 <div>{{ .HTML }}</div>
             </div>
         </div>

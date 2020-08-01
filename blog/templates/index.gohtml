@@ -2,7 +2,7 @@
 <head>
     <title>{{ .MetaTitle }}</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    {{ template "head" }}
 </head>
 <body>
     {{ template "navbar" }}
@@ -10,7 +10,7 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h1>This is the {{ .Title }} page</h1>
+                <h1 class="mb-4 text-center">This is the {{ .Title }} page</h1>
 
                 {{ range $article := .Articles }}
 
