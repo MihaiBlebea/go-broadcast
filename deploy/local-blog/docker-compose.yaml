@@ -3,10 +3,20 @@ version: "3.7"
 services:
     blog:
         build: ./../../blog
-        image: serbanblebea/go-blog:v0.3
+        image: serbanblebea/go-blog:v0.4
         container_name: blog
         ports:
             - 8088:8088
         environment:
             HTTP_PORT: 8088
         restart: on-failure
+    broadcast:
+        build: ./../../broadcast
+        image: serbanblebea/go-broadcast:v0.1
+        container_name: broadcast
+        # environment:
+        #     LINKEDIN_ACCESS_TOKEN: 8088
+        #     TWITTER_CONSUMER_KEY: 8088
+        #     TWITTER_CONSUMER_SECRET: 8088
+        #     TWITTER_TOKEN:
+        #     TWITTER_TOKEN_SECRET:

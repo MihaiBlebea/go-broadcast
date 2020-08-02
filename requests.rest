@@ -17,3 +17,7 @@ GET http://{{host}}/
 ###
 
 GET http://{{host}}/article/first-article
+
+
+### 
+GET https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77y35i071ogn31&redirect_uri=https://mihaiblebea.com&state=abcd&scope=w_member_social,r_liteprofile

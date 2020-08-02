@@ -99,17 +99,6 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
-# resource "kubernetes_secret" "user_password" {
-#     metadata {
-#         name      = "user-password"
-#         namespace = "mihaiblebea"
-#     }
-
-#     data = {
-#         password = file("${path.cwd}/secrets/password.txt")
-#     }
-# }
-
 resource "kubernetes_ingress" "blog-ingress" {
     metadata {
         name        = "blog-ingress"
@@ -146,6 +135,57 @@ resource "kubernetes_ingress" "blog-ingress" {
         tls {
             hosts       = ["mihaiblebea.com"]   
             secret_name = "mihaiblebea-cert"
+        }
+    }
+}
+
+resource "kubernetes_cron_job" "broadcast" {
+    metadata {
+        name      = "broadcast"
+        namespace = "mihaiblebea"
+    }
+
+    spec {
+        concurrency_policy            = "Replace"
+        failed_jobs_history_limit     = 5
+        schedule                      = "* * * * *"
+        starting_deadline_seconds     = 10
+        successful_jobs_history_limit = 10
+        suspend                       = true
+
+        job_template {
+            metadata {}
+
+            spec {
+                backoff_limit              = 2
+                ttl_seconds_after_finished = 10
+
+                template {
+                    metadata {}
+
+                    spec {
+                        container {
+                            name    = "broadcast"
+                            image   = "serbanblebea/go-broadcast:v0.1"
+                            # command = ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
+
+                            env_from {
+                                # name  = "LINKEDIN_ACCESS_TOKEN"
+                                secret_ref {
+                                    name = "prod-secrets"
+                                }
+                            }
+
+                            # env {
+                            #     name  = "GET_HOSTS_FROMS"
+                            #     value = "dns"
+                            # }
+                        }
+                        
+                        # restart_policy = "OnFailure"
+                    }
+                }
+            }
         }
     }
 }
