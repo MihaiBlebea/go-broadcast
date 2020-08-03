@@ -46,3 +46,8 @@ terraform: tf-init tf-plan tf-apply
 
 helm-debug:
 	cd $(HELM_PATH) && helm install --generate-name --debug --dry-run .
+
+# Kubernetes scripts
+
+manual-cronjob: 
+	kubectl create job --from=cronjob/broadcast broadcast-test-02

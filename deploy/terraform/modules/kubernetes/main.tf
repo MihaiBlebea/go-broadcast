@@ -166,23 +166,15 @@ resource "kubernetes_cron_job" "broadcast" {
                     spec {
                         container {
                             name    = "broadcast"
-                            image   = "serbanblebea/go-broadcast:v0.1"
+                            image   = var.broadcast_image
                             # command = ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
 
                             env_from {
-                                # name  = "LINKEDIN_ACCESS_TOKEN"
                                 secret_ref {
                                     name = "prod-secrets"
                                 }
                             }
-
-                            # env {
-                            #     name  = "GET_HOSTS_FROMS"
-                            #     value = "dns"
-                            # }
                         }
-                        
-                        # restart_policy = "OnFailure"
                     }
                 }
             }

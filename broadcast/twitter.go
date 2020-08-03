@@ -6,9 +6,19 @@ import (
 
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
+	"github.com/sirupsen/logrus"
 )
 
-func postTwitter() error {
+type twitterService struct {
+	logger *logrus.Logger
+}
+
+// TwitterService interface
+type TwitterService interface {
+	PostTweet(article *Article) error
+}
+
+func (s *twitterService) PostTweet(article *Article) error {
 	config := oauth1.NewConfig(
 		os.Getenv("TWITTER_CONSUMER_KEY"),
 		os.Getenv("TWITTER_CONSUMER_SECRET"),

@@ -1,6 +1,7 @@
 github.com/cenkalti/backoff v2.1.1+incompatible h1:tKJnvO2kl0zmb/jA5UKAt4VoEVw1qxKWjE/Bpp46npY=
 github.com/cenkalti/backoff v2.1.1+incompatible/go.mod h1:90ReRw6GdpyfrHakVjL/QHaoyV4aDUVVkXQJJJ3NXXM=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dghubble/go-twitter v0.0.0-20200725221434-4bc8ad7ad1b4 h1:I60CX3+rWlBGPXR13jwxxBWB2GhlhZkEEh5o1eDLzJg=
 github.com/dghubble/go-twitter v0.0.0-20200725221434-4bc8ad7ad1b4/go.mod h1:xfg4uS5LEzOj8PgZV7SQYRHbG7jPUnelEiaAVJxmhJE=
 github.com/dghubble/oauth1 v0.6.0 h1:m1yC01Ohc/eF38jwZ8JUjL1a+XHHXtGQgK+MxQbmSx0=
@@ -11,6 +12,10 @@ github.com/fionita/linkedin-go v0.0.0-20170522061944-de3395609bba h1:4i//jlqlIkF
 github.com/fionita/linkedin-go v0.0.0-20170522061944-de3395609bba/go.mod h1:QgKEGCAmJ4kwcApQ7dS6LdlW+ATaZ3lKJKXNUImey2k=
 github.com/google/go-querystring v1.0.0 h1:Xkwi/a1rcvNg1PPYe5vI8GbeBY/jrVuDX5ASuANWTrk=
 github.com/google/go-querystring v1.0.0/go.mod h1:odCYkC5MyYFN7vkCjXpyrEuKhc/BUO6wN/zVPAxq5ck=
+github.com/konsorten/go-windows-terminal-sequences v1.0.3/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrfsX/uA88=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
+github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
+golang.org/x/sys v0.0.0-20190422165155-953cdadca894/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

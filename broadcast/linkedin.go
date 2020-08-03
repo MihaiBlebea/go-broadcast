@@ -8,142 +8,28 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
-func postRequest() error {
+type linkedinService struct {
+	logger *logrus.Logger
+}
+
+// LinkedinService interface
+type LinkedinService interface {
+	ShareArticle(article *Article) error
+}
+
+func (s *linkedinService) ShareArticle(article *Article) error {
 	accessToken := os.Getenv("LINKEDIN_ACCESS_TOKEN")
 
-	type shareCommentary struct {
-		Text string `json:"text"`
-	}
-
-	type description struct {
-		Text string `json:"text"`
-	}
-
-	type title struct {
-		Text string `json:"text"`
-	}
-
-	type visibility struct {
-		Kind string `json:"com.linkedin.ugc.MemberNetworkVisibility"`
-	}
-
-	type media struct {
-		Status      string      `json:"status"`
-		Description description `json:"description"`
-		Media       string      `json:"media"`
-		OriginalURL string      `json:"originalUrl"`
-		Title       title       `json:"title"`
-	}
-
-	type content struct {
-		ShareCommentary    shareCommentary `json:"shareCommentary"`
-		ShareMediaCategory string          `json:"shareMediaCategory"`
-		Media              []media         `json:"media"`
-	}
-
-	type specificContent struct {
-		SpecificContent content `json:"com.linkedin.ugc.ShareContent"`
-	}
-
-	type body struct {
-		Author          string          `json:"author"`
-		LifecycleState  string          `json:"lifecycleState"`
-		SpecificContent specificContent `json:"specificContent"`
-		Visibility      visibility      `json:"visibility"`
-	}
-
-	// {
-	// 	"author": "urn:li:person:8675309",
-	// 	"lifecycleState": "PUBLISHED",
-	// 	"specificContent": {
-	// 		"com.linkedin.ugc.ShareContent": {
-	// 			"shareCommentary": {
-	// 				"text": "Learning more about LinkedIn by reading the LinkedIn Blog!"
-	// 			},
-	// 			"shareMediaCategory": "ARTICLE",
-	// 			"media": [
-	// 				{
-	// 					"status": "READY",
-	// 					"description": {
-	// 						"text": "Official LinkedIn Blog - Your source for insights and information about LinkedIn."
-	// 					},
-	// 					"originalUrl": "https://blog.linkedin.com/",
-	// 					"title": {
-	// 						"text": "Official LinkedIn Blog"
-	// 					}
-	// 				}
-	// 			]
-	// 		}
-	// 	},
-	// 	"visibility": {
-	// 		"com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
-	// 	}
-	// }
-
-	payload := body{
-		Author:         "urn:li:person:poh_wxCNVI",
-		LifecycleState: "PUBLISHED",
-		SpecificContent: specificContent{
-			SpecificContent: content{
-				ShareCommentary: shareCommentary{
-					Text: "Learning more about LinkedIn by reading the LinkedIn Blog!",
-				},
-				ShareMediaCategory: "ARTICLE",
-				Media: []media{
-					media{
-						Status: "READY",
-						Description: description{
-							Text: "This is the description",
-						},
-						OriginalURL: "https://mihaiblebea.com",
-						Title: title{
-							Text: "This is the title",
-						},
-					},
-				},
-			},
-		},
-		Visibility: visibility{
-			Kind: "PUBLIC",
-		},
-	}
-
-	b, err := json.Marshal(payload)
+	payload, err := s.createNewPayload(article)
 	if err != nil {
 		return err
 	}
 
-	var jsonStr = []byte(`{
-		"author": "urn:li:person:poh_wxCNVI",
-		"lifecycleState": "PUBLISHED",
-		"specificContent": {
-			"com.linkedin.ugc.ShareContent": {
-				"shareCommentary": {
-					"text": "Learning more about LinkedIn by reading the LinkedIn Blog!"
-				},
-				"shareMediaCategory": "ARTICLE",
-				"media": [
-					{
-						"status": "READY",
-						"description": {
-							"text": "Official LinkedIn Blog - Your source for insights and information about LinkedIn."
-						},
-						"originalUrl": "https://blog.linkedin.com/",
-						"title": {
-							"text": "Official LinkedIn Blog"
-						}
-					}
-				]
-			}
-		},
-		"visibility": {
-			"com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
-		}
-	}`)
-
-	req, err := http.NewRequest("POST", "https://api.linkedin.com/v2/ugcPosts", bytes.NewBuffer(jsonStr))
+	req, err := http.NewRequest("POST", "https://api.linkedin.com/v2/ugcPosts", bytes.NewBuffer(payload))
 	if err != nil {
 		return err
 	}
@@ -161,7 +47,7 @@ func postRequest() error {
 	}
 	defer resp.Body.Close()
 
-	b, err = ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
@@ -174,4 +60,48 @@ func postRequest() error {
 	}
 
 	return nil
+}
+
+func (s *linkedinService) createNewPayload(article *Article) ([]byte, error) {
+	payload := make(map[string]interface{})
+
+	shareCommentary := make(map[string]string)
+	shareCommentary["text"] = article.Title
+
+	description := make(map[string]string)
+	description["text"] = article.Summary
+
+	title := make(map[string]string)
+	title["text"] = article.Title
+
+	media := make(map[string]interface{})
+	media["status"] = "READY"
+	media["description"] = description
+	media["originalUrl"] = "https://mihaiblebea.com/article/" + article.Slug
+	media["title"] = title
+
+	shareContent := make(map[string]interface{})
+	shareContent["shareCommentary"] = shareCommentary
+	shareContent["shareMediaCategory"] = "ARTICLE"
+	shareContent["media"] = []map[string]interface{}{media}
+
+	specificContent := make(map[string]interface{})
+	specificContent["com.linkedin.ugc.ShareContent"] = shareContent
+
+	visibility := make(map[string]string)
+	visibility["com.linkedin.ugc.MemberNetworkVisibility"] = "CONNECTIONS"
+
+	payload["author"] = "urn:li:person:poh_wxCNVI"
+	payload["lifecycleState"] = "PUBLISHED"
+	payload["specificContent"] = specificContent
+	payload["visibility"] = visibility
+
+	p, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(string(p))
+
+	return p, nil
 }
