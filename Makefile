@@ -4,7 +4,7 @@ HELM_PATH := ./deploy/broadcast
 
 local:
 	export HTTP_PORT=8099 && \
-	cd ./application && \
+	cd ./blog && \
 	go run .
 
 # Docker scripts
