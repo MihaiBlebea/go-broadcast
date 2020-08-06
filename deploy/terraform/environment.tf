@@ -1,3 +1,3 @@
-variable "do_token" {
-    description = "digital ocean api token"
-}
+# variable "do_token" {
+#     description = "digital ocean api token"
+# }
