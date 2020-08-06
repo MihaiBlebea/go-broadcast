@@ -2,12 +2,20 @@ package page
 
 import (
 	"bytes"
+	"errors"
 	"html/template"
 
+	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting"
 	meta "github.com/yuin/goldmark-meta"
 	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer/html"
+	rendererHTML "github.com/yuin/goldmark/renderer/html"
+)
+
+// Errors
+var (
+	ErrInvalidType = errors.New("Invalid type while converting from interface")
 )
 
 type markdown struct {
@@ -25,13 +33,20 @@ func NewMarkdown() Markdown {
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			meta.Meta,
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("monokai"),
+				highlighting.WithFormatOptions(
+					html.WithLineNumbers(true),
+				),
+			),
 		),
 		goldmark.WithParserOptions(
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
-			html.WithXHTML(),
+			rendererHTML.WithHardWraps(),
+			rendererHTML.WithXHTML(),
+			rendererHTML.WithUnsafe(),
 		),
 	)
 
@@ -62,24 +77,24 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 	params := meta.Get(context)
 	title, ok := params["Title"].(string)
 	if ok != true {
-		return &Page{}, err
+		return &Page{}, ErrInvalidType
 	}
 
 	slug, ok := params["Slug"].(string)
 	if ok != true {
-		return &Page{}, err
+		return &Page{}, ErrInvalidType
 	}
 
 	layout, ok := params["Layout"].(string)
 	if ok != true {
-		return &Page{}, err
+		return &Page{}, ErrInvalidType
 	}
 
 	var image string
 	if _, ok := params["Image"]; ok != false {
 		image, ok = params["Image"].(string)
 		if ok != true {
-			return &Page{}, err
+			return &Page{}, ErrInvalidType
 		}
 	}
 
@@ -87,7 +102,7 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 	if _, ok := params["Summary"]; ok != false {
 		summary, ok = params["Summary"].(string)
 		if ok != true {
-			return &Page{}, err
+			return &Page{}, ErrInvalidType
 		}
 	}
 
@@ -95,8 +110,26 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 	if _, ok := params["Published"]; ok != false {
 		published, ok = params["Published"].(string)
 		if ok != true {
-			return &Page{}, err
+			return &Page{}, ErrInvalidType
 		}
+	}
+
+	var kind kind
+	k, ok := params["Kind"].(string)
+	if ok != true {
+		return &Page{}, ErrInvalidType
+	}
+
+	switch k {
+	case "article":
+		kind = kindArticle
+	default:
+		kind = kindPage
+	}
+
+	tags, err := castTagsToString(params)
+	if err != nil {
+		return &Page{}, err
 	}
 
 	p := &Page{
@@ -107,8 +140,35 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 		Image:     image,
 		Layout:    layout,
 		HTML:      template.HTML(buf.String()),
-		Published: published,
+		Tags:      tags,
+		Kind:      kind,
 	}
 
+	p.SetPublished(published)
+
 	return p, nil
+}
+
+func castTagsToString(params map[string]interface{}) ([]string, error) {
+	if _, ok := params["Tags"]; ok == false {
+		return []string{}, nil
+	}
+
+	tags, ok := params["Tags"].([]interface{})
+	if ok == false {
+		return []string{}, errors.New("Could not convert interface to slice of interfaces")
+	}
+
+	strTags := make([]string, len(tags))
+
+	for _, tag := range tags {
+		t, ok := tag.(string)
+		if ok == false {
+			return []string{}, errors.New("Could not convert interface to string")
+		}
+
+		strTags = append(strTags, t)
+	}
+
+	return strTags, nil
 }

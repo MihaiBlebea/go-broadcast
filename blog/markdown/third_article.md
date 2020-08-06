@@ -1,16 +1,15 @@
 ---
-Title: goldmark-meta
+Title: Third article
 Summary: Add YAML metadata to the document
 Image: https://yourbasic.org/golang/square-gopher.png
 Tags:
     - markdown
-    - goldmark
+    - golang
 Layout: article
 Slug: third-article
-Published: "2020-07-28"
+Published: "2020-07-03 15:04:05"
+Kind: article
 ---
-# Comply Advantage webhook MS
-
 ## Problem to be solved
 
 - We want operation team members to do updates in the Comply Advantage platform

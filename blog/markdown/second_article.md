@@ -3,14 +3,13 @@ Title: Second article
 Summary: This is the second article
 Image: https://yourbasic.org/golang/square-gopher.png
 Tags:
-    - markdown
-    - goldmark
+    - golang
+    - humsii
 Layout: article
 Slug: second-article
-Published: "2020-07-24"
+Published: "2020-07-02 15:04:05"
+Kind: article
 ---
-# Comply Advantage webhook MS
-
 ## Problem to be solved
 
 - We want operation team members to do updates in the Comply Advantage platform

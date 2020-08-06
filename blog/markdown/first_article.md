@@ -1,16 +1,15 @@
 ---
-Title: goldmark-meta
+Title: First article
 Summary: Add YAML metadata to the document
 Image: https://yourbasic.org/golang/square-gopher.png
 Tags:
-    - markdown
-    - goldmark
+    - golang
+    - api
 Layout: article
 Slug: first-article
-Published: "2020-07-28"
+Published: "2020-07-01 15:04:05"
+Kind: article
 ---
-# Comply Advantage webhook MS
-
 ## Problem to be solved
 
 - We want operation team members to do updates in the Comply Advantage platform
@@ -34,5 +33,17 @@ Published: "2020-07-28"
 - If the `search_id` is successfully sent to V2 monolith, then the key is removed from the queue
 
 #### TODO:
-- Add redis as a persistence store 
+- Add redis as a persistence store
+
+```go
+package main
+
+func main() {
+    fmt.Println("Hello world")
+}
+
+func init() {
+    fmt.Println("This is the init func")
+}
+```
 

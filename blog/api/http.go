@@ -92,7 +92,7 @@ func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
 		"duration": time.Since(start).Nanoseconds(),
 	}).Info("HTTP request ended")
 
-	page, err := h.pageService.LoadPage(slug, params)
+	page, err := h.pageService.LoadArticlePage(slug, params)
 	if err != nil {
 		page, _ = h.pageService.LoadPage("/error", params)
 		page.Render(w)

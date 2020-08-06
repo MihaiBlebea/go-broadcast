@@ -2,39 +2,50 @@
 <head>
     <title>{{ .MetaTitle }}</title>
 
+    <!-- Share on Linkedin -->
+    <meta property='og:title' content='{{ .Title }}'/>
+    <meta property='og:image' content='{{ .Image }}'/>
+    <meta property='og:description' content='{{ .Summary }}'/>
+    <meta property='og:url' content='https://mihaiblebea.com/article/{{ .Slug }}'/>
+
     {{ template "head" }}
+
 </head>
 <body>
     {{ template "navbar" }}
     
     <div class="container my-5">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-5">
             <div class="col-md-8">
-                <h1 class="mb-3">{{ .Title }}</h1>
-                <div class="media mb-4">
-                    <img src="https://uploads-ssl.webflow.com/5c517153f309ab9ee2e13bc4/5cdaba9f9c08faa36ffa3a54_DEBATERS-30.jpg"
-                        style="max-width:65px;"
-                        class="mr-3" 
-                        alt="article-author">
-                    <div class="media-body">
-                        <h5 class="mt-0">Mihai Blebea</h5>
-                        London based Go developer and advocate. Principal Engineer @ Chip
-                        <p class="mb-0">
-                            <a href="">
-                                <i class="fa fa-linkedin-square mr-2" aria-hidden="true"></i>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-youtube-play mr-2" aria-hidden="true"></i>
-                            </a>
-                            <a href="">
-                                <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                            </a>
-                        </p>
-                    </div>
+                <a class="mb-4 no-underline d-block" href="/">
+                    <i class="fa fa-arrow-left pl-0" aria-hidden="true"></i> Blog
+                </a>
+
+                <h1 class="mb-4">{{ .Title }}</h1>
+
+                <div class="mb-4">
+                    {{ template "card_author" }}
                 </div>
 
                 <img class="mb-3 w-100" src="{{ .Image }}" />
+                <p>Published {{ .GetHumanReadablePublished }}</p>
+
                 <div>{{ .HTML }}</div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h3 class="mb-3">More related content</h3> 
+                <div class="row">
+                    {{ range $article := .Articles }}
+
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            {{ template "card_article" $article }}
+                        </div>
+
+                    {{ end }}
+                </div>
             </div>
         </div>
     </div>

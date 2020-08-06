@@ -3,6 +3,7 @@ package page
 import (
 	"fmt"
 	"html/template"
+	"sort"
 
 	"github.com/MihaiBlebea/blog/go-broadcast/assets"
 	"github.com/MihaiBlebea/blog/go-broadcast/cache"
@@ -85,10 +86,48 @@ func (s *service) LoadBlogPage(slug string, optionalParams interface{}) (*Page, 
 
 	for _, p := range s.cache.All() {
 		article := p.(Page)
-		if article.Published != "" {
+		if article.Kind == kindArticle {
 			page.Articles = append(page.Articles, &article)
 		}
 	}
 
+	sort.SliceStable(page.Articles, func(i, j int) bool {
+		return page.Articles[i].Published.After(page.Articles[j].Published)
+	})
+
 	return page, err
+}
+
+func (s *service) LoadArticlePage(slug string, optionalParams interface{}) (*Page, error) {
+	page, err := s.LoadPage(slug, optionalParams)
+	if err != nil {
+		return &Page{}, err
+	}
+
+	for _, p := range s.cache.All() {
+		article := p.(Page)
+
+		if article.Slug == page.Slug || article.Kind != kindArticle {
+			continue
+		}
+
+		for _, tag := range page.Tags {
+			if contains(article.Tags, tag) {
+				page.Articles = append(page.Articles, &article)
+				break
+			}
+		}
+	}
+
+	return page, err
+}
+
+func contains(list []string, needle string) bool {
+	for _, item := range list {
+		if item == needle {
+			return true
+		}
+	}
+
+	return false
 }

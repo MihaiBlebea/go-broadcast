@@ -1,15 +1,13 @@
-{{ define "footer" }}
-<div class="container py-3">
-    <div class="row align-items-center">
-        <div class="col-12 col-sm-7 mb-3 mb-sm-0">
-            <nav class="nav">
-                <a class="nav-link pl-0" href="/">Home</a>
-                <a class="nav-link" href="/">Blog</a>
-                <a class="nav-link" href="#">About</a>
-                <a class="nav-link" href="#">Contact</a>
-            </nav>
-        </div>
-        <div class="col-12 col-sm-5 text-sm-right">
+{{ define "card_author" }}
+<div class="media">
+    <img src="https://uploads-ssl.webflow.com/5c517153f309ab9ee2e13bc4/5cdaba9f9c08faa36ffa3a54_DEBATERS-30.jpg"
+        style="max-width:65px;"
+        class="mr-3" 
+        alt="article-author">
+    <div class="media-body">
+        <h5 class="mt-0">Mihai Blebea</h5>
+        London based Go developer and advocate. Principal Engineer @ Chip
+        <p class="mb-0 mt-2">
             <a class="no-underline" href="">
                 <i class="fa fa-linkedin-square mr-2" aria-hidden="true"></i>
             </a>
@@ -22,7 +20,7 @@
             <a class="no-underline" href="">
                 <i class="fa fa-twitter-square" aria-hidden="true"></i>
             </a>
-        </div>
+        </p>
     </div>
 </div>
 {{ end }}
