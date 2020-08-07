@@ -3,7 +3,7 @@ version: "3.7"
 services:
     blog:
         build: ./../../blog
-        image: serbanblebea/go-blog:v0.7
+        image: serbanblebea/go-blog:v0.8
         container_name: blog
         ports:
             - 8088:8088

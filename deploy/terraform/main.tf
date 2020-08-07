@@ -17,7 +17,7 @@ module "helm" {
 module "kubernetes" {
     source                 = "./modules/kubernetes"
 
-    blog_image             = "serbanblebea/go-blog:v0.7"
+    blog_image             = "serbanblebea/go-blog:v0.8"
     broadcast_image        = "serbanblebea/go-broadcast:v0.4"
     kubernetes_host        = module.digital_ocean.kubernetes_host
     kubernetes_token       = module.digital_ocean.kubernetes_token

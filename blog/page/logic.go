@@ -107,8 +107,16 @@ func (s *service) LoadArticlePage(slug string, optionalParams interface{}) (*Pag
 	for _, p := range s.cache.All() {
 		article := p.(Page)
 
+		// If the related article is the same with the main one,
+		// or if the page is not actually an article, then just go to the next one
 		if article.Slug == page.Slug || article.Kind != kindArticle {
 			continue
+		}
+
+		// Allow just 3 related articles,
+		// there is no point to keep looping after we hit that number
+		if len(page.Articles) == 3 {
+			break
 		}
 
 		for _, tag := range page.Tags {
