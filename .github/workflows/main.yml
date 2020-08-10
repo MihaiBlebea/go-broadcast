@@ -37,6 +37,12 @@ jobs:
         tag_with_sha: true
         path: ./blog
     
+    - name: Init terraform
+      run: |
+        terraform init
+        terraform get
+      working-directory: ./deploy/terraform
+      
     - name: Deploy to Digital Ocean - plan Terraform
       working-directory: ./deploy/terraform
       run: terraform plan
