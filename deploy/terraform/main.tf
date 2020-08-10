@@ -1,3 +1,11 @@
+terraform {
+    backend "remote" {
+        organization = "PurpleTreeTech"
+        workspaces {
+            name = "go-broadcast"
+        }
+    }
+}
 
 module "digital_ocean" {
     source          = "./modules/digital_ocean"
