@@ -2,7 +2,7 @@
 module "digital_ocean" {
     source          = "./modules/digital_ocean"
 
-    do_token        = ""
+    do_token        = var.do_token
     loadbalancer_ip = module.helm.loadbalancer_ip.load_balancer_ingress[0].ip
 }
 
