@@ -50,8 +50,8 @@ jobs:
       
     - name: Terraform Plan
       working-directory: ./deploy/terraform
-      run: terraform plan -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}"
+      run: terraform plan -lock=false -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}"
     
     - name: Terraform Apply
       working-directory: ./deploy/terraform
-      run: terraform apply -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}"
+      run: terraform apply -lock=false -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}"
