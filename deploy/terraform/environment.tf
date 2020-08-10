@@ -1,7 +1,5 @@
 variable "do_token" {}
 
-variable "tf_token" {}
-
 variable "blog_image" {}
 
 variable "linkedin_access_token" {}

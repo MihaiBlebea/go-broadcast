@@ -1,11 +1,11 @@
 terraform {
     backend "remote" {
         organization = "PurpleTreeTech"
+        hostname     = "app.terraform.io"
+
         workspaces {
             name = "go-broadcast"
         }
-
-        token = var.tf_token
     }
 }
 
