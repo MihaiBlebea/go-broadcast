@@ -14,9 +14,9 @@ resource "digitalocean_certificate" "mihaiblebea" {
     domains = ["mihaiblebea.com"]
 }
 
-data "digitalocean_loadbalancer" "example" {
-    name = "af8083a73c70a45308c7a9337b3f77fa"
-}
+# data "digitalocean_loadbalancer" "example" {
+#     name = "af8083a73c70a45308c7a9337b3f77fa"
+# }
 
 resource "digitalocean_kubernetes_cluster" "cluster" {
     name    = "blog-k8-cluster-1"
