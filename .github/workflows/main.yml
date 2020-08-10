@@ -47,6 +47,7 @@ jobs:
       uses: hashicorp/terraform-github-actions@master
       with:
         tf_actions_subcommand: "plan"
+        tf_actions_version: 0.12.13
         args: -var="do_token=${{ secrets.DO_TOKEN }}" \
           -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" \
           -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" \
