@@ -39,7 +39,7 @@ jobs:
     
     - name: Terraform Init
       run: |
-        terraform init
+        terraform init -backend-config="tf_token=${{ secrets.TF_TOKEN }}"
         terraform get
       working-directory: ./deploy/terraform
       

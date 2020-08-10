@@ -4,6 +4,8 @@ terraform {
         workspaces {
             name = "go-broadcast"
         }
+
+        token = var.tf_token
     }
 }
 
