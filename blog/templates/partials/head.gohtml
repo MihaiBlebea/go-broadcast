@@ -6,6 +6,37 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
 
 <style>
+html {
+    --bg: #FCFCFC;
+    --bg-card: #FFF;
+    --color-text: #333333;
+    --color-heading: #000;
+}
+
+html[data-theme="dark"] {
+    --bg: #111111;
+    --bg-card: #333333;
+    --color-text: #B5B5B5;
+    --color-heading: #FFF;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--color-text);
+}
+
+.nav-link {
+    color: var(--color-heading)!important;
+}
+
+.navbar-brand {
+    color: var(--color-heading)!important;
+}
+
+.card {
+    background-color: var(--bg-card);
+}
+
 .fa {
     padding: 6px;
     font-size: 18px;
@@ -61,6 +92,15 @@ a.no-underline {
     left: 0; 
     width: 100%; 
     height: 100%; 
+}
+
+/* Transition animation */
+html.transition,
+html.transition *,
+html.transition *:before,
+html.transition *:after {
+    transition: all 750ms !important;
+    transition-delay: 0 !important;
 }
 </style>
 
