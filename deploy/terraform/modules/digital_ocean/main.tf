@@ -5,7 +5,7 @@ provider "digitalocean" {
 
 resource "digitalocean_domain" "mihaiblebea_com" {
     name       = "mihaiblebea.com"
-    ip_address = digitalocean_loadbalancer.public.loadbalancer_ip
+    ip_address = digitalocean_loadbalancer.public.ip
 }
 
 resource "digitalocean_certificate" "mihaiblebea" {
