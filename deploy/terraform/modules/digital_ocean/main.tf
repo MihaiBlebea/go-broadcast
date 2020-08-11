@@ -3,16 +3,36 @@ provider "digitalocean" {
     version = "1.22.0"
 }
 
-# resource "digitalocean_domain" "mihaiblebea_com" {
-#     name       = "mihaiblebea.com"
-#     ip_address = var.loadbalancer_ip
-# }
+resource "digitalocean_domain" "mihaiblebea_com" {
+    name       = "mihaiblebea.com"
+    ip_address = digitalocean_loadbalancer.public.loadbalancer_ip
+}
 
-# resource "digitalocean_certificate" "mihaiblebea" {
-#     name    = "mihaiblebea-cert"
-#     type    = "lets_encrypt"
-#     domains = ["mihaiblebea.com"]
-# }
+resource "digitalocean_certificate" "mihaiblebea" {
+    name    = "mihaiblebea-cert"
+    type    = "lets_encrypt"
+    domains = ["mihaiblebea.com"]
+}
+
+resource "digitalocean_loadbalancer" "public" {
+    name   = "loadbalancer-1"
+    region = "lon1"
+
+    forwarding_rule {
+        entry_port     = 80
+        entry_protocol = "http"
+
+        target_port     = 80
+        target_protocol = "http"
+    }
+
+    healthcheck {
+        port     = 22
+        protocol = "tcp"
+    }
+
+    droplet_ids = [digitalocean_kubernetes_cluster.cluster.node_pool[0].nodes[0].droplet_id]
+}
 
 resource "digitalocean_kubernetes_cluster" "cluster" {
     name    = "blog-k8-cluster-1"
