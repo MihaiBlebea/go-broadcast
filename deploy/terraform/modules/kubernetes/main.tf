@@ -99,6 +99,26 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
+resource "kubernetes_service" "blog_load_balancer" {
+    metadata {
+        name      = "blog-load-balancer"
+        namespace = "mihaiblebea"
+    }
+
+    spec {
+        selector = {
+            name = "blog-pod"
+        }
+
+        port {
+            port        = 80
+            target_port = var.http_port
+        }
+
+        type = "LoadBalancer"
+    }
+}
+
 # resource "kubernetes_ingress" "blog-ingress" {
 #     metadata {
 #         name        = "blog-ingress"
