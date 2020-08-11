@@ -103,6 +103,10 @@ resource "kubernetes_service" "blog_load_balancer" {
     metadata {
         name      = "blog-load-balancer"
         namespace = "mihaiblebea"
+
+        annotations = {
+            "service.beta.kubernetes.io/do-loadbalancer-name" =  "testingloadbalancer"
+        }
     }
 
     spec {

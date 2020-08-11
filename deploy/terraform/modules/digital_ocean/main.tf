@@ -3,16 +3,16 @@ provider "digitalocean" {
     version = "1.22.0"
 }
 
-resource "digitalocean_domain" "mihaiblebea_com" {
-    name       = "mihaiblebea.com"
-    ip_address = var.loadbalancer_ip
-}
+# resource "digitalocean_domain" "mihaiblebea_com" {
+#     name       = "mihaiblebea.com"
+#     ip_address = var.loadbalancer_ip
+# }
 
-resource "digitalocean_certificate" "mihaiblebea" {
-    name    = "mihaiblebea-cert"
-    type    = "lets_encrypt"
-    domains = [digitalocean_domain.mihaiblebea_com.name]
-}
+# resource "digitalocean_certificate" "mihaiblebea" {
+#     name    = "mihaiblebea-cert"
+#     type    = "lets_encrypt"
+#     domains = [digitalocean_domain.mihaiblebea_com.name]
+# }
 
 # resource "digitalocean_loadbalancer" "public" {
 #     name   = "loadbalancer-1"
