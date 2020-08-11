@@ -1,7 +1,6 @@
 terraform {
     backend "remote" {
-        organization = "PurpleTreeTech"
-        hostname     = "app.terraform.io"
+        organization = "api-org-PurpleTreeTech"
 
         workspaces {
             name = "go-broadcast"
