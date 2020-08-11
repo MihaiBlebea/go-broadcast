@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DOCKER_IMAGE_TAG: ${{ env.GITHUB_SHA }}
+      DOCKER_IMAGE_TAG: ${{ GITHUB_SHA }}
       
     steps:
     - uses: actions/checkout@v2
