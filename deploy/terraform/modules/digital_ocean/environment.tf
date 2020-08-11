@@ -3,10 +3,10 @@ variable "do_token" {
     type        = string
 }
 
-# variable "kubeconfig_path" {
-#     description = "the path to save the kubeconfig file to"
-#     default     = "~/.kube/test-config"
-# }
+variable "kubeconfig_path" {
+    description = "the path to save the kubeconfig file to"
+    default     = "~/.kube/test-config"
+}
 
 variable "cluster_tags" {
     description = "default cluster tags"
