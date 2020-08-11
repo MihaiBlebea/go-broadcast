@@ -23,7 +23,7 @@ resource "kubernetes_deployment" "blog-deployment" {
     }
 
     spec {
-        replicas = 2
+        replicas = 1
 
         selector {
             match_labels = {
