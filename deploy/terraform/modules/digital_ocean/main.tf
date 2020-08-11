@@ -11,7 +11,7 @@ resource "digitalocean_domain" "mihaiblebea_com" {
 resource "digitalocean_certificate" "mihaiblebea" {
     name    = "mihaiblebea-cert"
     type    = "lets_encrypt"
-    domains = ["mihaiblebea.com"]
+    domains = [digitalocean_domain.mihaiblebea_com.name]
 }
 
 resource "digitalocean_loadbalancer" "public" {
