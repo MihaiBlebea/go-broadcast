@@ -105,7 +105,9 @@ resource "kubernetes_service" "blog_load_balancer" {
         namespace = "mihaiblebea"
 
         annotations = {
-            "service.beta.kubernetes.io/do-loadbalancer-name" =  "testingloadbalancer"
+            "service.beta.kubernetes.io/do-loadbalancer-name"                   = "testingloadbalancer"
+            "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
+            "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
         }
     }
 
@@ -115,9 +117,16 @@ resource "kubernetes_service" "blog_load_balancer" {
         }
 
         port {
+            name        = "http"
             port        = 80
             target_port = var.http_port
         }
+
+        # port {
+        #     name        = "https"
+        #     port        = 443
+        #     target_port = var.http_port
+        # }
 
         type = "LoadBalancer"
     }
