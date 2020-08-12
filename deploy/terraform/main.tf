@@ -16,7 +16,7 @@ module "digital_ocean" {
 }
 
 module "digital_ocean_lb" {
-    # depends_on         = [module.kubernetes]
+    module_depends_on  = [module.kubernetes]
     source             = "./modules/digital_ocean_lb"
 
     do_token           = var.do_token
