@@ -134,46 +134,6 @@ resource "kubernetes_service" "blog_load_balancer" {
     }
 }
 
-# resource "kubernetes_ingress" "blog-ingress" {
-#     metadata {
-#         name        = "blog-ingress"
-#         namespace   = "mihaiblebea"
-#         annotations = {
-#             "nginx.ingress.kubernetes.io/proxy-body-size" = "20m"
-#             "kubernetes.io/ingress.class"                 = "nginx"
-#             "kubernetes.io/tls-acme"                      = true
-#             "nginx.ingress.kubernetes.io/ssl-redirect"    = true
-#         }
-#     }
-
-#     spec {
-#         backend {
-#             service_name = "blog-service-cluster"
-#             service_port = 80
-#         }
-
-#         rule {
-#             host = "mihaiblebea.com"
-
-#             http {
-#                 path {
-#                     path = "/"
-
-#                     backend {
-#                         service_name = "blog-service-cluster"
-#                         service_port = 80
-#                     }
-#                 }
-#             }
-#         }
-
-#         tls {
-#             hosts       = ["mihaiblebea.com"]   
-#             secret_name = "mihaiblebea-cert"
-#         }
-#     }
-# }
-
 resource "kubernetes_cron_job" "broadcast" {
     metadata {
         name      = "broadcast"

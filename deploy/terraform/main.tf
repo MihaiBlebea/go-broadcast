@@ -11,19 +11,15 @@ terraform {
 }
 
 module "digital_ocean" {
-    source          = "./modules/digital_ocean"
-
-    do_token          = var.do_token
-    loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
+    source   = "./modules/digital_ocean"
+    do_token = var.do_token
 }
 
-# module "helm" {
-#     source = "./modules/helm"
-
-#     kubernetes_host        = module.digital_ocean.kubernetes_host
-#     kubernetes_token       = module.digital_ocean.kubernetes_token
-#     cluster_ca_certificate = module.digital_ocean.cluster_ca_certificate
-# }
+module "digital_ocean_lb" {
+    source   = "./modules/digital_ocean_lb"
+    do_token = var.do_token
+    # loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
+}
 
 module "kubernetes" {
     source                  = "./modules/kubernetes"

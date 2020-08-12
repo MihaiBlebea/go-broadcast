@@ -7,16 +7,16 @@ provider "digitalocean" {
 #     name = "blogloadbalancer"
 # }
 
-resource "digitalocean_domain" "mihaiblebea_com" {
-    name       = "mihaiblebea.com"
-    # ip_address = data.digitalocean_loadbalancer.load_balancer.ip
-}
+# resource "digitalocean_domain" "mihaiblebea_com" {
+#     name       = "mihaiblebea.com"
+#     ip_address = data.digitalocean_loadbalancer.load_balancer.ip
+# }
 
-resource "digitalocean_certificate" "mihaiblebea" {
-    name    = "mihaiblebea-cert"
-    type    = "lets_encrypt"
-    domains = [digitalocean_domain.mihaiblebea_com.name]
-}
+# resource "digitalocean_certificate" "mihaiblebea" {
+#     name    = "mihaiblebea-cert"
+#     type    = "lets_encrypt"
+#     domains = [digitalocean_domain.mihaiblebea_com.name]
+# }
 
 resource "digitalocean_kubernetes_cluster" "cluster" {
     name    = "blog-k8-cluster-1"
