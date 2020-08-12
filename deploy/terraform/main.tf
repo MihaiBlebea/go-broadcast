@@ -16,11 +16,10 @@ module "digital_ocean" {
 }
 
 module "digital_ocean_lb" {
-    module_depends_on  = [module.kubernetes]
     source             = "./modules/digital_ocean_lb"
 
     do_token           = var.do_token
-    load_balancer_name = "blogloadbalancer"
+    load_balancer_name = module.kubernetes.load_balancer_name
     # loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
 }
 
