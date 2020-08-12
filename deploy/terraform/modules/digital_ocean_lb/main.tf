@@ -30,11 +30,22 @@ resource "digitalocean_loadbalancer" "public" {
         target_protocol = "http"
     }
 
+    forwarding_rule {
+        entry_port     = 433
+        entry_protocol = "https"
+
+        target_port     = 30011
+        target_protocol = "http"
+
+        certificate_id = digitalocean_certificate.mihaiblebea.id
+    }
+
     healthcheck {
         port     = 22
         protocol = "tcp"
     }
 
+    redirect_http_to_https = true
+
     droplet_ids = [var.droplet_id]
-    # droplet_ids = [digitalocean_kubernetes_cluster.cluster.node_pool[0].nodes[0].droplet_id]
 }

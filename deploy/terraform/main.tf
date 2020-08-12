@@ -20,8 +20,6 @@ module "digital_ocean_lb" {
 
     do_token   = var.do_token
     droplet_id = module.digital_ocean.droplet_id
-
-    # loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
 }
 
 module "kubernetes" {
@@ -30,9 +28,6 @@ module "kubernetes" {
     kubernetes_host         = module.digital_ocean.kubernetes_host
     kubernetes_token        = module.digital_ocean.kubernetes_token
     cluster_ca_certificate  = module.digital_ocean.cluster_ca_certificate
-
-    # certificate_id          = module.digital_ocean_lb.certificate_id
-    # load_balancer_name      = "blogloadbalancer"
 
     blog_image              = var.blog_image
     broadcast_image         = "serbanblebea/go-broadcast:v0.4"
