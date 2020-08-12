@@ -25,6 +25,10 @@ body {
     color: var(--color-heading)!important;
 }
 
+.navbar-toggler {
+    color: var(--color-heading)!important;
+}
+
 .card {
     background-color: var(--bg-card);
 }
