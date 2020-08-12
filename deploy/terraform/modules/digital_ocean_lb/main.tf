@@ -3,19 +3,15 @@ provider "digitalocean" {
     version = "1.22.0"
 }
 
-# data "digitalocean_loadbalancer" "load_balancer" {
-#     name = var.load_balancer_name
-# }
-
 resource "digitalocean_domain" "mihaiblebea_com" {
-    name       = "mihaiblebea.com"
+    name       = var.domain_name
     ip_address = digitalocean_loadbalancer.public.ip
 }
 
 resource "digitalocean_certificate" "mihaiblebea" {
     name    = "mihaiblebea-cert"
     type    = "lets_encrypt"
-    domains = [digitalocean_domain.mihaiblebea_com.name]
+    domains = [var.domain_name]
 }
 
 resource "digitalocean_loadbalancer" "public" {

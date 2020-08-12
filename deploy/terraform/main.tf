@@ -18,8 +18,9 @@ module "digital_ocean" {
 module "digital_ocean_lb" {
     source     = "./modules/digital_ocean_lb"
 
-    do_token   = var.do_token
-    droplet_id = module.digital_ocean.droplet_id
+    do_token    = var.do_token
+    domain_name = "mihaiblebea.com"
+    droplet_id  = module.digital_ocean.droplet_id
 }
 
 module "kubernetes" {
