@@ -11,19 +11,18 @@ terraform {
 }
 
 module "digital_ocean" {
-    source          = "./modules/digital_ocean"
-
-    do_token        = var.do_token
-    # loadbalancer_ip = module.helm.loadbalancer_ip.load_balancer_ingress[0].ip
+    source   = "./modules/digital_ocean"
+    do_token = var.do_token
 }
 
-# module "helm" {
-#     source = "./modules/helm"
+module "digital_ocean_lb" {
+    source     = "./modules/digital_ocean_lb"
 
-#     kubernetes_host        = module.digital_ocean.kubernetes_host
-#     kubernetes_token       = module.digital_ocean.kubernetes_token
-#     cluster_ca_certificate = module.digital_ocean.cluster_ca_certificate
-# }
+    do_token   = var.do_token
+    droplet_id = module.digital_ocean.droplet_id
+
+    # loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
+}
 
 module "kubernetes" {
     source                  = "./modules/kubernetes"
@@ -31,6 +30,9 @@ module "kubernetes" {
     kubernetes_host         = module.digital_ocean.kubernetes_host
     kubernetes_token        = module.digital_ocean.kubernetes_token
     cluster_ca_certificate  = module.digital_ocean.cluster_ca_certificate
+
+    # certificate_id          = module.digital_ocean_lb.certificate_id
+    # load_balancer_name      = "blogloadbalancer"
 
     blog_image              = var.blog_image
     broadcast_image         = "serbanblebea/go-broadcast:v0.4"

@@ -99,43 +99,38 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
-# resource "kubernetes_ingress" "blog-ingress" {
+# resource "kubernetes_service" "blog_load_balancer" {
 #     metadata {
-#         name        = "blog-ingress"
-#         namespace   = "mihaiblebea"
+#         name      = "blog-load-balancer"
+#         namespace = "mihaiblebea"
+
 #         annotations = {
-#             "nginx.ingress.kubernetes.io/proxy-body-size" = "20m"
-#             "kubernetes.io/ingress.class"                 = "nginx"
-#             "kubernetes.io/tls-acme"                      = true
-#             "nginx.ingress.kubernetes.io/ssl-redirect"    = true
+#             "service.beta.kubernetes.io/do-loadbalancer-name"                   = var.load_balancer_name
+#             "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
+#             "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
+#             "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
+#             # "service.beta.kubernetes.io/do-loadbalancer-certificate-id"         = var.certificate_id
 #         }
 #     }
 
 #     spec {
-#         backend {
-#             service_name = "blog-service-cluster"
-#             service_port = 80
+#         selector = {
+#             name = "blog-pod"
 #         }
 
-#         rule {
-#             host = "mihaiblebea.com"
-
-#             http {
-#                 path {
-#                     path = "/"
-
-#                     backend {
-#                         service_name = "blog-service-cluster"
-#                         service_port = 80
-#                     }
-#                 }
-#             }
+#         port {
+#             name        = "http"
+#             port        = 80
+#             target_port = var.http_port
 #         }
 
-#         tls {
-#             hosts       = ["mihaiblebea.com"]   
-#             secret_name = "mihaiblebea-cert"
+#         port {
+#             name        = "https"
+#             port        = 443
+#             target_port = var.http_port
 #         }
+
+#         type = "LoadBalancer"
 #     }
 # }
 
