@@ -17,6 +17,14 @@ body {
     color: var(--color-text);
 }
 
+img {
+    max-width: 100%;
+}
+
+.text-article {
+    font-size: 1.1em;
+}
+
 .nav-link {
     color: var(--color-heading)!important;
 }
