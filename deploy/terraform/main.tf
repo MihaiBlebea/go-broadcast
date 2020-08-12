@@ -32,7 +32,7 @@ module "kubernetes" {
     cluster_ca_certificate  = module.digital_ocean.cluster_ca_certificate
 
     # certificate_id          = module.digital_ocean_lb.certificate_id
-    load_balancer_name      = "blogloadbalancer"
+    # load_balancer_name      = "blogloadbalancer"
 
     blog_image              = var.blog_image
     broadcast_image         = "serbanblebea/go-broadcast:v0.4"
