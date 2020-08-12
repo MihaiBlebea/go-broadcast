@@ -109,7 +109,7 @@ resource "kubernetes_service" "blog_load_balancer" {
             "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
             "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
             "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
-            "service.beta.kubernetes.io/do-loadbalancer-certificate-id"         = var.certificate_id
+            # "service.beta.kubernetes.io/do-loadbalancer-certificate-id"         = var.certificate_id
         }
     }
 
