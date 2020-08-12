@@ -11,9 +11,12 @@ bundle:
 	cd ./blog && \
 	make bundle
 
+open:
+	open http://localhost:8088
+
 # Docker scripts
 
-build-up: bundle build up
+build-up: bundle build up open
 
 build:
 	cd $(DOCKER_PATH) && docker-compose build --no-cache
