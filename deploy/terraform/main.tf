@@ -14,9 +14,7 @@ module "digital_ocean" {
     source          = "./modules/digital_ocean"
 
     do_token        = var.do_token
-    loadbalancer_ip = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
-    # loadbalancer_id = module.kubernetes.loadbalancer_raw.metadata.annotations["kubernetes.digitalocean.com/load-balancer-id"]
-    # loadbalancer_ip = module.helm.loadbalancer_ip.load_balancer_ingress[0].ip
+    # loadbalancer_ip = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
 }
 
 # module "helm" {

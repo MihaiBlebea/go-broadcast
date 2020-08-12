@@ -99,39 +99,33 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
-resource "kubernetes_service" "blog_load_balancer" {
-    metadata {
-        name      = "blog-load-balancer"
-        namespace = "mihaiblebea"
+# resource "kubernetes_service" "blog_load_balancer" {
+#     metadata {
+#         name      = "blog-load-balancer"
+#         namespace = "mihaiblebea"
 
-        annotations = {
-            "service.beta.kubernetes.io/do-loadbalancer-name"                   = "blogloadbalancer"
-            "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
-            "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
-            "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
-        }
-    }
+#         annotations = {
+#             "service.beta.kubernetes.io/do-loadbalancer-name"                   = "blogloadbalancer"
+#             "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
+#             "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
+#             "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
+#         }
+#     }
 
-    spec {
-        selector = {
-            name = "blog-pod"
-        }
+#     spec {
+#         selector = {
+#             name = "blog-pod"
+#         }
 
-        port {
-            name        = "http"
-            port        = 80
-            target_port = var.http_port
-        }
+#         port {
+#             name        = "http"
+#             port        = 80
+#             target_port = var.http_port
+#         }
 
-        # port {
-        #     name        = "https"
-        #     port        = 443
-        #     target_port = var.http_port
-        # }
-
-        type = "LoadBalancer"
-    }
-}
+#         type = "LoadBalancer"
+#     }
+# }
 
 # resource "kubernetes_ingress" "blog-ingress" {
 #     metadata {
