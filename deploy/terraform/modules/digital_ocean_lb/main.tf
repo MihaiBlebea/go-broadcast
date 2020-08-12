@@ -27,7 +27,7 @@ resource "digitalocean_loadbalancer" "public" {
     }
 
     forwarding_rule {
-        entry_port     = 433
+        entry_port     = 443
         entry_protocol = "https"
 
         target_port     = 30011
