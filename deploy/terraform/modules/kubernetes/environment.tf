@@ -36,4 +36,4 @@ variable "twitter_token_secret" {}
 
 # variable "certificate_id" {}
 
-variable "load_balancer_name" {}
+# variable "load_balancer_name" {}
