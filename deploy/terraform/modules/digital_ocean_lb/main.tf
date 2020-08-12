@@ -26,7 +26,7 @@ resource "digitalocean_loadbalancer" "public" {
         entry_port     = 80
         entry_protocol = "http"
 
-        target_port     = 80011
+        target_port     = 30011
         target_protocol = "http"
     }
 
