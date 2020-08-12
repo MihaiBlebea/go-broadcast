@@ -20,6 +20,8 @@ module "digital_ocean_lb" {
 
     do_token           = var.do_token
     load_balancer_name = module.kubernetes.load_balancer_name
+    droplet_id         = module.digital_ocean.droplet_id
+    
     # loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
 }
 
