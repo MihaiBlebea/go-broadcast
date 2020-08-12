@@ -105,7 +105,7 @@ resource "kubernetes_service" "blog_load_balancer" {
         namespace = "mihaiblebea"
 
         annotations = {
-            "service.beta.kubernetes.io/do-loadbalancer-name"                   = "blogloadbalancer"
+            "service.beta.kubernetes.io/do-loadbalancer-name"                   = var.load_balancer_name
             "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
             "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
             "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
