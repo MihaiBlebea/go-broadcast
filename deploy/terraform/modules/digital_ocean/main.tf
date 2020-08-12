@@ -3,13 +3,13 @@ provider "digitalocean" {
     version = "1.22.0"
 }
 
-data "digitalocean_loadbalancer" "load_balancer" {
-    name = var.loadbalancer_name
-}
+# data "digitalocean_loadbalancer" "load_balancer" {
+#     name = "blogloadbalancer"
+# }
 
 resource "digitalocean_domain" "mihaiblebea_com" {
     name       = "mihaiblebea.com"
-    ip_address = data.digitalocean_loadbalancer.load_balancer.ip
+    # ip_address = data.digitalocean_loadbalancer.load_balancer.ip
 }
 
 resource "digitalocean_certificate" "mihaiblebea" {

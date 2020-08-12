@@ -15,7 +15,6 @@ module "digital_ocean" {
 
     do_token          = var.do_token
     loadbalancer_ip   = module.kubernetes.loadbalancer_raw.load_balancer_ingress[0].ip
-    loadbalancer_name = module.kubernetes.loadbalancer_raw.metadata.annotations["service.beta.kubernetes.io/do-loadbalancer-name"]
 }
 
 # module "helm" {
