@@ -4,7 +4,7 @@ provider "digitalocean" {
 }
 
 data "digitalocean_loadbalancer" "load_balancer" {
-    name = "testingloadbalancer"
+    name = "blogloadbalancer"
 }
 
 resource "digitalocean_domain" "mihaiblebea_com" {
