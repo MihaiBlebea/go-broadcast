@@ -3,7 +3,7 @@ variable "do_token" {
     type        = string
 }
 
-variable "load_balancer_name" {}
+# variable "load_balancer_name" {}
 
 variable "droplet_id" {}
 
