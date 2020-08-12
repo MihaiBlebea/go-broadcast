@@ -40,3 +40,6 @@ spec:
       protocol: TCP
       port: 8090
       targetPort: 8090
+
+
+https://goobar.io/2019/12/07/manually-trigger-a-github-actions-workflow/

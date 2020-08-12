@@ -34,4 +34,4 @@ variable "twitter_token" {}
 
 variable "twitter_token_secret" {}
 
-# variable "certificate_id" {}
+variable "certificate_id" {}
