@@ -36,5 +36,5 @@ resource "digitalocean_loadbalancer" "public" {
     }
 
     droplet_ids = [var.droplet_id]
-    droplet_ids = [digitalocean_kubernetes_cluster.cluster.node_pool[0].nodes[0].droplet_id]
+    # droplet_ids = [digitalocean_kubernetes_cluster.cluster.node_pool[0].nodes[0].droplet_id]
 }
