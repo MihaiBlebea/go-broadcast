@@ -124,6 +124,12 @@ resource "kubernetes_service" "blog_load_balancer" {
             target_port = var.http_port
         }
 
+        port {
+            name        = "https"
+            port        = 443
+            target_port = var.http_port
+        }
+
         type = "LoadBalancer"
     }
 }
