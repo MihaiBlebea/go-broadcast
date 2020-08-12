@@ -7,9 +7,13 @@ local:
 	cd ./blog && \
 	go run .
 
+bundle:
+	cd ./blog && \
+	make bundle
+
 # Docker scripts
 
-build-up: build up
+build-up: bundle build up
 
 build:
 	cd $(DOCKER_PATH) && docker-compose build --no-cache
