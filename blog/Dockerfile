@@ -28,6 +28,9 @@ WORKDIR /app
 
 COPY --from=build_base /tmp/go-sample-app/out/go-sample-app /app/blog
 
+# Copy the static folder and get all the static files inside it
+COPY ./static /app/static
+
 EXPOSE ${HTTP_PORT}
 
 # Run the binary program produced by `go install`

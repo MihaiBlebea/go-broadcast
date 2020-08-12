@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"path"
 	"time"
 
 	"github.com/MihaiBlebea/blog/go-broadcast/page"
@@ -34,6 +37,17 @@ func NewHTTPServer(pageService page.Service, logger *logrus.Logger) HTTPServer {
 
 	r.Methods("GET").Path("/").HandlerFunc(httpServer.BlogHandler)
 	r.Methods("GET").Path("/article/{slug}").HandlerFunc(httpServer.ArticleHandler)
+
+	r.PathPrefix("/static/").Handler(
+		http.StripPrefix(
+			"/static/",
+			http.FileServer(
+				http.Dir(
+					httpServer.staticFolderPath(),
+				),
+			),
+		),
+	)
 
 	middlewareCORS := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -108,4 +122,22 @@ func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
 
 func (h *httpServer) GetHandler() http.Handler {
 	return h.handler
+}
+
+func (h *httpServer) staticFolderPath() string {
+	p, err := os.Executable()
+	if err != nil {
+		h.logger.Fatal(err)
+	}
+
+	absPath := fmt.Sprintf(
+		"%s/%s/",
+		path.Dir(p),
+		"static",
+	)
+	if _, err := os.Stat(absPath); os.IsNotExist(err) {
+		h.logger.Fatal(err)
+	}
+
+	return absPath
 }
