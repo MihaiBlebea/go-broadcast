@@ -41,7 +41,7 @@ resource "digitalocean_loadbalancer" "public" {
         protocol = "tcp"
     }
 
-    redirect_http_to_https = true
+    # redirect_http_to_https = true
 
     droplet_ids = [var.droplet_id]
 }
