@@ -16,7 +16,11 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-
+  
+    - name: Bundle the files with the binary
+      working-directory: ./blog
+      run: go-bindata -o=assets/bindata.go --pkg=assets templates/... markdown/...
+      
     - name: Test blog Go app
       working-directory: ./blog
       run: go test ./...
