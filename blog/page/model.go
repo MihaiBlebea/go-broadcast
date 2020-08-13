@@ -91,6 +91,16 @@ func (p *Page) GetHumanReadablePublished() string {
 	)
 }
 
+// GetFormatPublished returns formatted published date
+func (p *Page) GetFormatPublished() string {
+	return fmt.Sprintf(
+		"%d %s %d",
+		p.Published.Day(),
+		p.Published.Month().String(),
+		p.Published.Year(),
+	)
+}
+
 // GetShareOnTwitterLink returns a link pre-polulated from the content of the page
 func (p *Page) GetShareOnTwitterLink() string {
 	slug := p.Slug
