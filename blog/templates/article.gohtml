@@ -2,6 +2,8 @@
 <head>
     <title>{{ .MetaTitle }}</title>
 
+    {{ template "head" }}
+
     <!-- Share on Linkedin -->
     <meta property='og:title' content='{{ .Title }}'/>
     <meta property='og:image' content='{{ .Image }}'/>
@@ -18,8 +20,6 @@
     <meta property="twitter:description" content="{{ .Summary }}">
     <meta property="twitter:image" content="{{ .Image }}">
     <meta property='twitter:url' content='https://mihaiblebea.com/article/{{ .Slug }}'/>
-
-    {{ template "head" }}
 
 </head>
 <body>
