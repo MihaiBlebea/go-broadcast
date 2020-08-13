@@ -11,3 +11,7 @@ variable "twitter_consumer_secret" {}
 variable "twitter_token" {}
 
 variable "twitter_token_secret" {}
+
+variable "domain_name" {}
+
+variable "google_search_console_code" {}
