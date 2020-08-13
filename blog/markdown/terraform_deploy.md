@@ -45,6 +45,24 @@ You are left with figuring out on yourself how the current infrastructure platfo
 
 This is the time when you would want a tool like Terraform to come to the rescue.
 
+When everything is finished and ready to go live, you start working on deploying this code into production.
+
+But wait...
+
+There is no clear documentation for the current infrastructure.
+
+
+Then **Alex** points out that the company is using S3 to store credentials for the production environment, but there is no bucket called credentials.
+
+Also, **Mary** says that there might be a load balancer somewhere that rutes traffic between the different staging envs...
+
+Cherry on cake, the main platform engineer who holds the keys to all the infrastructure has decided to leave the company 😂.
+
+You are left with **figuring out on yourself how the current infrastructure works** and how to deploy your code into production.
+
+This is the time when you would want a tool like Terraform to come to the rescue.
+
+**Jack** can bet £5 that there are 8 boxes in a AWS account, but you can find just 3 of them.
 ## How to become a better developer by using infrastructure as code
 
 I would say that infrastructure as code is not a new concept anymore, and the benefits that it can bring to your project, heavily outweight the **pain** of learning a new tool.
@@ -128,7 +146,9 @@ Tags are optional, so you can skip this step if you don't have a specific case f
 
 If you run this Terraform file right now, with `terraform init` and then `terraform plan`, you will see some data in HCL (Hashicorp Language) with all the resources that you plan to generate.
 
-Next, if you are oki with how things look, run `terraform apply` and you will be prompted to approve the changes with a simple `yes`. Or, in my case you will get an eeror saying that the DO api token is not valid 😂😂😂.
+Next, if you are oki with how things look, run `terraform apply` and you will be prompted to approve the changes with a simple `yes`. Or, in my case you will get an error saying that the DO api token is not valid 😂😂😂.
+
+> Don't forget to replace the dummy Digital Ocean API token with the real one
 
 <img src="/static/img/yeey.gif" />
 
@@ -318,6 +338,8 @@ resource "digitalocean_certificate" "mihaiblebea" {
 
 In **Part 2** we will add variables, outputs and start using Terraform modules to make our infrastructure as code more modular and to support a stagging and a production environment, without copy-pasting code around.
 
-There is always a high risk when using Terraform to commit passwords to Github if you are copy-pasting them directly in your `tf` files, so always be very careful about doing so. Stay close for part 2, where I will show you how to use Terraform variables to hide those passwords.
+> There is always a high risk when using Terraform to commit passwords to Github if you are copy-pasting them directly in your `tf` files, so always be very careful about doing so. 
+
+Stay close for part 2, where I will show you how to use Terraform variables to hide those passwords.
 
 <img src="/static/img/home_alone.jpg" />

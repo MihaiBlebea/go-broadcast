@@ -14,6 +14,14 @@ resource "digitalocean_certificate" "mihaiblebea" {
     domains = [var.domain_name]
 }
 
+resource "digitalocean_record" "txt_google_search_console" {
+    domain   = var.domain_name
+    type     = "TXT"
+    name     = "@"
+    priority = 10
+    value    = var.google_search_console_code
+}
+
 resource "digitalocean_loadbalancer" "public" {
     name   = "loadbalancer-1"
     region = "lon1"
