@@ -1,34 +1,32 @@
 {{ define "card_article" }}
 <div class="card">
-    <a href="/article/{{ .Slug }}">
+    <a href="/article/{{ .Slug }}" class="position-relative">
+        <div class="position-absolute text-center card-details-overlay">
+            <div><i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ .GetFormatPublished }}</div>
+            <div><i class="fa fa-user pl-0" aria-hidden="true"></i> Mihai Blebea</div>
+        </div>
+
+        <h3 class="position-absolute card-title-overlay w-100 mb-0"><strong>{{ .Title }}</strong></h3>
+
         <img src="{{ .Image }}" class="card-img-top" alt="...">
     </a>
     <div class="card-body">
-        <h3 class="card-title"><strong>{{ .Title }}</strong></h3>
         <p class="card-text">
             {{ .Summary }}... 
             <a class="d-block" href="/article/{{ .Slug }}">Read more</a>
         </p>
 
         <p class="mb-0">Share on</p>
-        <div class="row text-muted">
-            <div class="col-12 col-sm-5 mb-2 mb-sm-0">
-                <a class="no-underline" href="{{ .GetShareOnLinkedinLink }}" target="_blank">
-                    <i class="fa fa-linkedin-square mr-2" aria-hidden="true"></i>
-                </a>
-                <a class="no-underline" href="{{ .GetShareOnFacebookLink }}" target="_blank">
-                    <i class="fa fa-facebook-square mr-2" aria-hidden="true"></i>
-                </a>
-                <a class="no-underline" href="{{ .GetShareOnTwitterLink }}" target="_blank">
-                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                </a>
-            </div>
-            <div class="col-12 col-sm-7 text-md-right text-small">
-                <span class="mr-0 mr-sm-2"><i class="fa fa-user pl-0" aria-hidden="true"></i> Mihai Blebea</span>
-    
-                <i class="fa fa-newspaper-o" aria-hidden="true"></i> {{ .GetHumanReadablePublished }}
-            </div>
-        </div>
+        
+        <a class="no-underline" href="{{ .GetShareOnLinkedinLink }}" target="_blank">
+            <i class="fa fa-linkedin-square mr-2" aria-hidden="true"></i>
+        </a>
+        <a class="no-underline" href="{{ .GetShareOnFacebookLink }}" target="_blank">
+            <i class="fa fa-facebook-square mr-2" aria-hidden="true"></i>
+        </a>
+        <a class="no-underline" href="{{ .GetShareOnTwitterLink }}" target="_blank">
+            <i class="fa fa-twitter-square" aria-hidden="true"></i>
+        </a>
     </div>
 </div>
 {{ end }}
