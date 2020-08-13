@@ -1,6 +1,6 @@
 ---
 Title: How to build infrastructure with code, using Terraform with Kubernetes - Part 1
-Summary: We are going to build a CI/CD pipeline from scratch. It's probably not going to be production ready, but will work for most individual developers
+Summary: What is this infrastructure as code all about? If you ever had to deal with infrastructure built by somebody else and passed onto you without documentation, then this article is for you.
 Image: https://www.terraform.io/assets/images/og-image-large-e60c82fe.png
 Tags:
     - terraform
@@ -21,10 +21,29 @@ How do you know where to draw a line in the sand and just say enough is enough?
 
 <img src="/static/img/devops.jpg" />
 
-I would say that infrastructure as code is not a new concept anymore, and the benefits that it can bring to your project, heavily outweight the **pain** of learning another tool.
+Let me know if you can relate to this scenario:
 
-Terraform and Kubernetes are definitely usefull tools to have in your developer arsenal.
+Let's say you are joining a new company and you are excited to start contributing to the code base.
 
+You want to impress your new manager so you over-deliver on this new shiny microservice that everybody expects to be a hit.
+
+When everything is finished and ready to go live, you start working on deploying this code into production.
+
+But wait...
+
+There is no clear documentation for the current infrastructure.
+
+Jack can bet £5 that there are 8 boxes in a AWS account, but you can find just 3 of them.
+
+Then Alex points out that the company is using S3 to store credentials for the production environment, but there is no bucket called credentials.
+
+Also, Mary says that there might be a load balancer somewhere that rutes traffic between the different staging envs...
+
+Cherry on cake, the main platform engineer who holds the keys to all the infrastructure has decided to leave the company 😂.
+
+You are left with figuring out on yourself how the current infrastructure platform works and how to deploy your code into production.
+
+This is the time when you would want a tool like Terraform to come to the rescue.
 
 When everything is finished and ready to go live, you start working on deploying this code into production.
 
@@ -46,11 +65,24 @@ This is the time when you would want a tool like Terraform to come to the rescue
 **Jack** can bet £5 that there are 8 boxes in a AWS account, but you can find just 3 of them.
 ## How to become a better developer by using infrastructure as code
 
-## What are we trying to achieve
+I would say that infrastructure as code is not a new concept anymore, and the benefits that it can bring to your project, heavily outweight the **pain** of learning a new tool.
 
-## Let's build some infrastructure
+In this article, I we will walk together towards deploying a Golang application with Kubernetes and Terraform.
 
-### Baby steps
+If keep on reading till the end, you will:
+
+- Get a better understanding on how Terraform works, so you can create infrastructure from config files, destroy it and build it again, all in under 5 minutes
+- Find out how to create a Kubernetes cluster on Digital Ocean so you can improve your platform in incremental steps, without the need to touch the web interface of your cloud provider of choice
+- Learn how to use Terraform modules to make your infrastructure more modular and create multiple environments from the same config files
+
+## Before we start you will need to have this prepared
+
+- Digital Ocean accunt - the only time you will need to touch the web platform
+- Digital Ocean API token - easy to get once you finished the step above
+- Terraform installation on your laptop
+- Kubernetes and Kubectl on your local laptop
+
+## Let's build some infrastructure one step at a time
 
 If you never used Terraform before, I suggest you start with the official documentation, which is by far one of the best documentation I came across.
 

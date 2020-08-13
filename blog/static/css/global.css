@@ -3,6 +3,7 @@ html {
     --bg-card: #FFF;
     --color-text: #333333;
     --color-heading: #000;
+    --bg-blockquote: #C3C3C3;
 }
 
 html[data-theme="dark"] {
@@ -10,6 +11,7 @@ html[data-theme="dark"] {
     --bg-card: #333333;
     --color-text: #B5B5B5;
     --color-heading: #FFF;
+    --bg-blockquote: #333333;
 }
 
 body {
@@ -19,6 +21,13 @@ body {
 
 img {
     max-width: 100%;
+}
+
+blockquote {
+    background-color: var(--bg-blockquote);
+    color: var(--color-text);
+    padding: 20px;
+    text-align: center;
 }
 
 .text-article {
