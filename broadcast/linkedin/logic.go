@@ -1,4 +1,4 @@
-package main
+package linkedin
 
 import (
 	"bytes"
@@ -7,29 +7,30 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 
+	"github.com/MihaiBlebea/broadcast/model"
 	"github.com/sirupsen/logrus"
 )
 
-type linkedinService struct {
-	logger *logrus.Logger
+const baseURL = "https://api.linkedin.com/v2"
+
+type service struct {
+	accessToken string
+	logger      *logrus.Logger
 }
 
-// LinkedinService interface
-type LinkedinService interface {
-	ShareArticle(article *Article) error
+// New creates a new linkedin service
+func New(accessToken string, logger *logrus.Logger) Service {
+	return &service{accessToken, logger}
 }
 
-func (s *linkedinService) ShareArticle(article *Article) error {
-	accessToken := os.Getenv("LINKEDIN_ACCESS_TOKEN")
-
+func (s *service) ShareArticle(article *model.Article) error {
 	payload, err := s.createNewPayload(article)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", "https://api.linkedin.com/v2/ugcPosts", bytes.NewBuffer(payload))
+	req, err := http.NewRequest("POST", fmt.Sprintf("%s/%s", baseURL, "ugcPosts"), bytes.NewBuffer(payload))
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func (s *linkedinService) ShareArticle(article *Article) error {
 	req.Header.Set("X-Restli-Protocol-Version", "2.0.0")
 	req.Header.Set(
 		"Authorization",
-		fmt.Sprintf("Bearer %s", accessToken),
+		fmt.Sprintf("Bearer %s", s.accessToken),
 	)
 
 	client := &http.Client{}
@@ -47,13 +48,10 @@ func (s *linkedinService) ShareArticle(article *Article) error {
 	}
 	defer resp.Body.Close()
 
-	b, err := ioutil.ReadAll(resp.Body)
+	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(fmt.Sprintf("Status code is %d", resp.StatusCode))
-	fmt.Println(string(b))
 
 	if resp.StatusCode != http.StatusCreated {
 		return errors.New("Something went wrong with the server")
@@ -62,7 +60,7 @@ func (s *linkedinService) ShareArticle(article *Article) error {
 	return nil
 }
 
-func (s *linkedinService) createNewPayload(article *Article) ([]byte, error) {
+func (s *service) createNewPayload(article *model.Article) ([]byte, error) {
 	payload := make(map[string]interface{})
 
 	shareCommentary := make(map[string]string)
@@ -77,7 +75,7 @@ func (s *linkedinService) createNewPayload(article *Article) ([]byte, error) {
 	media := make(map[string]interface{})
 	media["status"] = "READY"
 	media["description"] = description
-	media["originalUrl"] = "https://mihaiblebea.com/article/" + article.Slug
+	media["originalUrl"] = article.URL
 	media["title"] = title
 
 	shareContent := make(map[string]interface{})
@@ -100,8 +98,6 @@ func (s *linkedinService) createNewPayload(article *Article) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(string(p))
 
 	return p, nil
 }
