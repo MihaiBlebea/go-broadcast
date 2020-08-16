@@ -1,31 +1,90 @@
 package main
 
 import (
+	"errors"
+	"os"
+	"time"
+
+	"github.com/MihaiBlebea/broadcast/linkedin"
+	"github.com/MihaiBlebea/broadcast/model"
+	"github.com/MihaiBlebea/broadcast/pocket"
+	"github.com/MihaiBlebea/broadcast/twitter"
+	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
+)
+
+// errors
+var (
+	ErrNoArticle = errors.New("No articles left in Pocket")
 )
 
 func main() {
 	logger := logrus.New()
 	logger.SetFormatter(&logrus.JSONFormatter{})
 
-	article := Article{
-		Image:     "https://demo.plugins360.com/wp-content/uploads/2017/12/demo.png",
-		Title:     "This is a demo title",
-		Slug:      "demo-slug",
-		Summary:   "This is a short description of the internal content of the blog article",
-		Tags:      []string{"article", "it", "tech"},
-		Published: "2020-07-28",
+	pocket := pocket.New(
+		os.Getenv("POCKET_CONSUMER_KEY"),
+		os.Getenv("POCKET_ACCESS_TOKEN"),
+		logger,
+	)
+
+	linkedin := linkedin.New(
+		os.Getenv("LINKEDIN_ACCESS_TOKEN"),
+		logger,
+	)
+	twitter := twitter.New(
+		os.Getenv("TWITTER_CONSUMER_KEY"),
+		os.Getenv("TWITTER_CONSUMER_SECRET"),
+		os.Getenv("TWITTER_TOKEN"),
+		os.Getenv("TWITTER_TOKEN_SECRET"),
+		logger,
+	)
+
+	c := cron.New()
+	c.AddFunc("@hourly", func() {
+		err := publish(pocket, linkedin, twitter)
+		if err != nil {
+			logger.Error(err)
+		}
+	})
+
+	c.Start()
+
+	for true {
+		time.Sleep(24 * 60 * time.Minute)
+	}
+}
+
+func publish(pocket pocket.Service, linkedin linkedin.Service, twitter twitter.Service) error {
+	resp, err := pocket.RetrieveArticles()
+	if err != nil {
+		return err
 	}
 
-	linkedin := linkedinService{logger}
-	err := linkedin.ShareArticle(&article)
-	if err != nil {
-		logger.Error(err)
+	if len(resp.GetArticles()) == 0 {
+		return ErrNoArticle
 	}
 
-	twitter := twitterService{logger}
-	err = twitter.PostTweet(&article)
-	if err != nil {
-		logger.Error(err)
+	article := resp.GetArticles()[0]
+
+	publish := model.Article{
+		Title:   article.ResolvedTitle,
+		URL:     article.GivenURL,
+		Summary: article.Excerpt,
+		Tags:    []string{"article", "demo", "tech"},
 	}
+
+	err = linkedin.ShareArticle(&publish)
+	if err != nil {
+		return err
+	}
+
+	err = twitter.PostTweet(&publish)
+	if err != nil {
+		return err
+	}
+
+	err = pocket.ArchiveArticle(article.ItemID)
+
+	return err
 }
