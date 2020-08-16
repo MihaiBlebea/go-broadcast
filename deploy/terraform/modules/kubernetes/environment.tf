@@ -34,6 +34,10 @@ variable "twitter_token" {}
 
 variable "twitter_token_secret" {}
 
+variable "pocket_consumer_key" {}
+
+variable "pocket_access_token" {}
+
 # variable "certificate_id" {}
 
 # variable "load_balancer_name" {}

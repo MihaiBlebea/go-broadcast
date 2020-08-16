@@ -32,11 +32,13 @@ module "kubernetes" {
     cluster_ca_certificate  = module.digital_ocean.cluster_ca_certificate
 
     blog_image              = var.blog_image
-    broadcast_image         = "serbanblebea/go-broadcast:v0.4"
+    broadcast_image         = var.broadcast_image
 
     linkedin_access_token   = var.linkedin_access_token
     twitter_consumer_key    = var.twitter_consumer_key
     twitter_consumer_secret = var.twitter_consumer_secret
     twitter_token           = var.twitter_token
     twitter_token_secret    = var.twitter_token_secret
+    pocket_consumer_key     = var.pocket_consumer_key
+    pocket_access_token     = var.pocket_access_token
 }

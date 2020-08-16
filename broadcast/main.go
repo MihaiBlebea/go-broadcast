@@ -3,11 +3,13 @@ package main
 import (
 	"errors"
 	"os"
+	"time"
 
 	"github.com/MihaiBlebea/broadcast/linkedin"
 	"github.com/MihaiBlebea/broadcast/model"
 	"github.com/MihaiBlebea/broadcast/pocket"
 	"github.com/MihaiBlebea/broadcast/twitter"
+	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 )
 
@@ -38,9 +40,18 @@ func main() {
 		logger,
 	)
 
-	err := publish(pocket, linkedin, twitter)
-	if err != nil {
-		logger.Error(err)
+	c := cron.New()
+	c.AddFunc("@hourly", func() {
+		err := publish(pocket, linkedin, twitter)
+		if err != nil {
+			logger.Error(err)
+		}
+	})
+
+	c.Start()
+
+	for true {
+		time.Sleep(24 * 60 * time.Minute)
 	}
 }
 

@@ -99,80 +99,118 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
-# resource "kubernetes_service" "blog_load_balancer" {
-#     metadata {
-#         name      = "blog-load-balancer"
-#         namespace = "mihaiblebea"
-
-#         annotations = {
-#             "service.beta.kubernetes.io/do-loadbalancer-name"                   = var.load_balancer_name
-#             "service.beta.kubernetes.io/do-loadbalancer-protocol"               = "http"
-#             "service.beta.kubernetes.io/do-loadbalancer-tls-ports"              = "443"
-#             "service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https" = "true"
-#             # "service.beta.kubernetes.io/do-loadbalancer-certificate-id"         = var.certificate_id
-#         }
-#     }
-
-#     spec {
-#         selector = {
-#             name = "blog-pod"
-#         }
-
-#         port {
-#             name        = "http"
-#             port        = 80
-#             target_port = var.http_port
-#         }
-
-#         port {
-#             name        = "https"
-#             port        = 443
-#             target_port = var.http_port
-#         }
-
-#         type = "LoadBalancer"
-#     }
-# }
-
-resource "kubernetes_cron_job" "broadcast" {
+resource "kubernetes_deployment" "broadcast-deployment" {
     metadata {
-        name      = "broadcast"
+        name      = "broadcast-deployment"
         namespace = "mihaiblebea"
+        labels    = {
+            app  = "go-broadcast"
+            name = "broadcast-deployment"
+        }
     }
 
     spec {
-        concurrency_policy            = "Replace"
-        failed_jobs_history_limit     = 5
-        schedule                      = "* * * * *"
-        starting_deadline_seconds     = 10
-        successful_jobs_history_limit = 10
-        suspend                       = true
+        replicas = 1
 
-        job_template {
-            metadata {}
+        selector {
+            match_labels = {
+                app  = "go-broadcast"
+                name = "broadcast-pod"
+            }
+        }
+
+        template {
+            metadata {
+                name   = "broadcast-pod"
+                labels = {
+                    app  = "go-broadcast"
+                    name = "broadcast-pod"
+                }
+            }
 
             spec {
-                backoff_limit              = 2
-                ttl_seconds_after_finished = 10
+                container {
+                    image = var.broadcast_image
+                    name  = "broadcast-container"
+                    env {
+                        name  = "LINKEDIN_ACCESS_TOKEN"
+                        value = var.linkedin_access_token
+                    }
 
-                template {
-                    metadata {}
+                    env {
+                        name  = "TWITTER_CONSUMER_KEY"
+                        value = var.twitter_consumer_key
+                    }
 
-                    spec {
-                        container {
-                            name    = "broadcast"
-                            image   = var.broadcast_image
-                            # command = ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
+                    env {
+                        name  = "TWITTER_CONSUMER_SECRET"
+                        value = var.twitter_consumer_secret
+                    }
 
-                            env_from {
-                                secret_ref {
-                                    name = "prod-secrets"
-                                }
-                            }
-                        }
+                    env {
+                        name  = "TWITTER_TOKEN"
+                        value = var.twitter_token
+                    }
+
+                    env {
+                        name  = "TWITTER_TOKEN_SECRET"
+                        value = var.twitter_token_secret
+                    }
+
+                    env {
+                        name  = "POCKET_CONSUMER_KEY"
+                        value = var.pocket_consumer_key
+                    }
+
+                    env {
+                        name  = "POCKET_ACCESS_TOKEN"
+                        value = var.pocket_access_token
                     }
                 }
             }
         }
     }
 }
+
+# resource "kubernetes_cron_job" "broadcast" {
+#     metadata {
+#         name      = "broadcast"
+#         namespace = "mihaiblebea"
+#     }
+
+#     spec {
+#         concurrency_policy            = "Replace"
+#         failed_jobs_history_limit     = 5
+#         schedule                      = "* * * * *"
+#         starting_deadline_seconds     = 10
+#         successful_jobs_history_limit = 10
+#         suspend                       = true
+
+#         job_template {
+#             metadata {}
+
+#             spec {
+#                 backoff_limit              = 2
+#                 ttl_seconds_after_finished = 10
+
+#                 template {
+#                     metadata {}
+
+#                     spec {
+#                         container {
+#                             name    = "broadcast"
+#                             image   = var.broadcast_image
+#                             # command = ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
+
+#                             env_from {
+#                                 secret_ref {
+#                                     name = "prod-secrets"
+#                                 }
+#                             }
+#                         }
+#                     }
+#                 }
+#             }
+#         }
+#     }
+# }
