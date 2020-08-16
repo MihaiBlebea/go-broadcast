@@ -2,3 +2,4 @@ deploy/terraform/.terraform
 deploy/terraform/*.tfstate
 deploy/terraform/*.tfstate.backup
 deploy/terraform/modules/kubernetes/secrets
+broadcast/Makefile
