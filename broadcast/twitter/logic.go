@@ -47,9 +47,18 @@ func (s *service) PostTweet(article Article) error {
 	if err != nil {
 		return err
 	}
-	_, _, err = s.client.Statuses.Update(content, nil)
 
-	return err
+	_, _, err = s.client.Statuses.Update(content, nil)
+	if err != nil {
+		return err
+	}
+	s.logger.WithFields(logrus.Fields{
+		"title":   article.GetTitle(),
+		"content": content,
+		"link":    article.GetURL(),
+	}).Info("Posted on Twitter")
+
+	return nil
 }
 
 func (s *service) createUpdateContent(article Article) (string, error) {

@@ -107,6 +107,10 @@ func (s *service) ArchiveArticle(itemID string) error {
 		return err
 	}
 
+	s.logger.WithFields(logrus.Fields{
+		"item_id": itemID,
+	}).Info("Article archived on Pocket")
+
 	return nil
 }
 

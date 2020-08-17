@@ -41,7 +41,8 @@ func main() {
 	)
 
 	c := cron.New()
-	c.AddFunc("0 13 * * *", func() {
+	c.AddFunc("0 0 16 * * *", func() {
+		logger.Info("Cronjob running - broadcasting article")
 		err := publish(pocket, linkedin, twitter)
 		if err != nil {
 			logger.Error(err)
@@ -51,6 +52,7 @@ func main() {
 	c.Start()
 
 	for true {
+		logger.Info("Starting the script. Daily check")
 		time.Sleep(24 * 60 * time.Minute)
 	}
 }

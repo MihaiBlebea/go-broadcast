@@ -14,6 +14,7 @@ import (
 
 const baseURL = "https://api.linkedin.com/v2"
 const maxCharCount = 1300
+const linkedinUserID = "urn:li:person:poh_wxCNVI"
 
 type service struct {
 	accessToken string
@@ -58,6 +59,11 @@ func (s *service) ShareArticle(article Article) error {
 		return errors.New("Something went wrong with the server")
 	}
 
+	s.logger.WithFields(logrus.Fields{
+		"title": article.GetTitle(),
+		"link":  article.GetURL(),
+	}).Info("Posted on Linkedin")
+
 	return nil
 }
 
@@ -67,8 +73,13 @@ func (s *service) createNewPayload(article Article) ([]byte, error) {
 	shareCommentary := make(map[string]string)
 	shareCommentary["text"] = article.GetTitle()
 
+	summary := s.createSummary(article)
+	s.logger.WithFields(logrus.Fields{
+		"summary": summary,
+	}).Info("Created summary for posting on Linkedin")
+
 	description := make(map[string]string)
-	description["text"] = s.createSummary(article)
+	description["text"] = summary
 
 	title := make(map[string]string)
 	title["text"] = article.GetTitle()
@@ -90,7 +101,7 @@ func (s *service) createNewPayload(article Article) ([]byte, error) {
 	visibility := make(map[string]string)
 	visibility["com.linkedin.ugc.MemberNetworkVisibility"] = "CONNECTIONS"
 
-	payload["author"] = "urn:li:person:poh_wxCNVI"
+	payload["author"] = linkedinUserID
 	payload["lifecycleState"] = "PUBLISHED"
 	payload["specificContent"] = specificContent
 	payload["visibility"] = visibility
