@@ -41,7 +41,7 @@ func main() {
 	)
 
 	c := cron.New()
-	c.AddFunc("@hourly", func() {
+	c.AddFunc("0 10 * * *", func() {
 		err := publish(pocket, linkedin, twitter)
 		if err != nil {
 			logger.Error(err)
