@@ -8,8 +8,8 @@ import (
 	"github.com/MihaiBlebea/broadcast/linkedin"
 	"github.com/MihaiBlebea/broadcast/model"
 	"github.com/MihaiBlebea/broadcast/pocket"
+	"github.com/MihaiBlebea/broadcast/scheduler"
 	"github.com/MihaiBlebea/broadcast/twitter"
-	"github.com/robfig/cron"
 	"github.com/sirupsen/logrus"
 )
 
@@ -40,16 +40,18 @@ func main() {
 		logger,
 	)
 
-	c := cron.New()
-	c.AddFunc("0 0 16 * * *", func() {
-		logger.Info("Cronjob running - broadcasting article")
-		err := publish(pocket, linkedin, twitter)
-		if err != nil {
-			logger.Error(err)
-		}
+	schedule := scheduler.New(logger)
+	schedule.Run([]scheduler.Task{
+		scheduler.Task{
+			Spec: "0 6 9 * * *",
+			Func: func() {
+				err := publish(pocket, linkedin, twitter)
+				if err != nil {
+					logger.Error(err)
+				}
+			},
+		},
 	})
-
-	c.Start()
 
 	for true {
 		logger.Info("Starting the script. Daily check")
