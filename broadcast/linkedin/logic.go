@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
-	"github.com/MihaiBlebea/broadcast/model"
 	"github.com/sirupsen/logrus"
 )
 
 const baseURL = "https://api.linkedin.com/v2"
+const maxCharCount = 1300
 
 type service struct {
 	accessToken string
@@ -24,7 +25,7 @@ func New(accessToken string, logger *logrus.Logger) Service {
 	return &service{accessToken, logger}
 }
 
-func (s *service) ShareArticle(article *model.Article) error {
+func (s *service) ShareArticle(article Article) error {
 	payload, err := s.createNewPayload(article)
 	if err != nil {
 		return err
@@ -60,22 +61,22 @@ func (s *service) ShareArticle(article *model.Article) error {
 	return nil
 }
 
-func (s *service) createNewPayload(article *model.Article) ([]byte, error) {
+func (s *service) createNewPayload(article Article) ([]byte, error) {
 	payload := make(map[string]interface{})
 
 	shareCommentary := make(map[string]string)
-	shareCommentary["text"] = article.Title
+	shareCommentary["text"] = article.GetTitle()
 
 	description := make(map[string]string)
-	description["text"] = article.Summary
+	description["text"] = s.createSummary(article)
 
 	title := make(map[string]string)
-	title["text"] = article.Title
+	title["text"] = article.GetTitle()
 
 	media := make(map[string]interface{})
 	media["status"] = "READY"
 	media["description"] = description
-	media["originalUrl"] = article.URL
+	media["originalUrl"] = article.GetURL()
 	media["title"] = title
 
 	shareContent := make(map[string]interface{})
@@ -100,4 +101,20 @@ func (s *service) createNewPayload(article *model.Article) ([]byte, error) {
 	}
 
 	return p, nil
+}
+
+func (s *service) createSummary(article Article) string {
+	if len(article.GetSummary()) > maxCharCount {
+		return article.GetSummary()[0 : maxCharCount-1]
+	}
+
+	if len(article.GetHashedTags()) > 0 {
+		return fmt.Sprintf(
+			"%s\n%s",
+			article.GetSummary(),
+			strings.Join(article.GetHashedTags(), " "),
+		)
+	}
+
+	return article.GetSummary()
 }

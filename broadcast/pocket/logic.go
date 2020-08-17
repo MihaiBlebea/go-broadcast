@@ -37,9 +37,11 @@ func (s *service) RetrieveArticles() (*RetrieveArticlesResponse, error) {
 	payload := struct {
 		ConsumerKey string `json:"consumer_key"`
 		AccessToken string `json:"access_token"`
+		DetailType  string `json:"detailType"`
 	}{
 		ConsumerKey: s.consumerKey,
 		AccessToken: s.accessToken,
+		DetailType:  "complete",
 	}
 	b, err := json.Marshal(payload)
 	if err != nil {
