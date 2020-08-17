@@ -6,6 +6,6 @@ require (
 	github.com/dghubble/go-twitter v0.0.0-20200725221434-4bc8ad7ad1b4
 	github.com/dghubble/oauth1 v0.6.0
 	github.com/fionita/linkedin-go v0.0.0-20170522061944-de3395609bba
-	github.com/robfig/cron v1.2.0
+	github.com/robfig/cron/v3 v3.0.0
 	github.com/sirupsen/logrus v1.6.0
 )
