@@ -1,15 +1,43 @@
 package pocket
 
 import (
+	"fmt"
 	"time"
 )
 
 // Article struct
 type Article struct {
-	ItemID        string `json:"item_id"`
-	GivenURL      string `json:"given_url"`
-	ResolvedTitle string `json:"resolved_title"`
-	Excerpt       string `json:"excerpt"`
+	ItemID        string         `json:"item_id"`
+	GivenURL      string         `json:"given_url"`
+	ResolvedTitle string         `json:"resolved_title"`
+	Excerpt       string         `json:"excerpt"`
+	Tags          map[string]Tag `json:"tags"`
+}
+
+// GetTags return a list of tag strings
+func (a *Article) GetTags() []string {
+	tags := []string{}
+	for _, tag := range a.Tags {
+		tags = append(tags, tag.Tag)
+	}
+
+	return tags
+}
+
+// GetHashedTags returns a list of tag strings formatted with a hash in front
+func (a *Article) GetHashedTags() []string {
+	tags := []string{}
+	for _, tag := range a.Tags {
+		tags = append(tags, fmt.Sprintf("#%s", tag.Tag))
+	}
+
+	return tags
+}
+
+// Tag struct
+type Tag struct {
+	ItemID string `json:"item_id"`
+	Tag    string `json:"tag"`
 }
 
 // RetrieveArticlesResponse response from retrieve endpoint

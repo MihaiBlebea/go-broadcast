@@ -41,7 +41,7 @@ func main() {
 	)
 
 	c := cron.New()
-	c.AddFunc("0 10 * * *", func() {
+	c.AddFunc("0 13 * * *", func() {
 		err := publish(pocket, linkedin, twitter)
 		if err != nil {
 			logger.Error(err)
@@ -71,7 +71,7 @@ func publish(pocket pocket.Service, linkedin linkedin.Service, twitter twitter.S
 		Title:   article.ResolvedTitle,
 		URL:     article.GivenURL,
 		Summary: article.Excerpt,
-		Tags:    []string{"article", "demo", "tech"},
+		Tags:    article.GetTags(),
 	}
 
 	err = linkedin.ShareArticle(&publish)
