@@ -24,14 +24,20 @@ img {
 }
 
 blockquote {
-    background-color: var(--bg-blockquote);
-    color: var(--color-text);
+    background-color: #FFC300;
+    color: #000;
     padding: 20px;
+    padding-bottom: 70px;
     text-align: center;
+    border-left: 20px solid #ff5733;
 }
 
 blockquote::before {
     content: "\"";
+    font-size: 40px;
+    font-style: italic;
+    font-weight: 700;
+    color: #ff5733;
 }
 
 .text-article blockquote p {

@@ -37,6 +37,9 @@ func NewHTTPServer(pageService page.Service, logger *logrus.Logger) HTTPServer {
 
 	r.Methods("GET").Path("/").HandlerFunc(httpServer.BlogHandler)
 	r.Methods("GET").Path("/article/{slug}").HandlerFunc(httpServer.ArticleHandler)
+	r.Methods("GET").Path("/contact").HandlerFunc(httpServer.GetContactHandler)
+
+	r.Methods("GET").Path("/about").HandlerFunc(httpServer.GetAboutHandler)
 
 	r.PathPrefix("/static/").Handler(
 		http.StripPrefix(
@@ -116,6 +119,54 @@ func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
 	err = page.Render(w)
 	if err != nil {
 		page, _ = h.pageService.LoadPage("/error", params)
+		page.Render(w)
+	}
+}
+
+func (h *httpServer) GetContactHandler(w http.ResponseWriter, r *http.Request) {
+	h.logger.WithFields(logrus.Fields{
+		"url": r.URL.String(),
+	}).Info("HTTP request started")
+	start := time.Now()
+
+	defer h.logger.WithFields(logrus.Fields{
+		"duration": time.Since(start).Nanoseconds(),
+	}).Info("HTTP request ended")
+
+	page, err := h.pageService.LoadPage("contact", nil)
+	if err != nil {
+		page, _ = h.pageService.LoadPage("/error", nil)
+		page.Render(w)
+		return
+	}
+
+	err = page.Render(w)
+	if err != nil {
+		page, _ = h.pageService.LoadPage("/error", nil)
+		page.Render(w)
+	}
+}
+
+func (h *httpServer) GetAboutHandler(w http.ResponseWriter, r *http.Request) {
+	h.logger.WithFields(logrus.Fields{
+		"url": r.URL.String(),
+	}).Info("HTTP request started")
+	start := time.Now()
+
+	defer h.logger.WithFields(logrus.Fields{
+		"duration": time.Since(start).Nanoseconds(),
+	}).Info("HTTP request ended")
+
+	page, err := h.pageService.LoadPage("about", nil)
+	if err != nil {
+		page, _ = h.pageService.LoadPage("/error", nil)
+		page.Render(w)
+		return
+	}
+
+	err = page.Render(w)
+	if err != nil {
+		page, _ = h.pageService.LoadPage("/error", nil)
 		page.Render(w)
 	}
 }
