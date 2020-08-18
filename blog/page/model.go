@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"math"
 	"strings"
 	"time"
 )
@@ -57,46 +56,12 @@ func (p *Page) SetPublished(date string) error {
 	return nil
 }
 
-// GetHumanReadablePublished returns a human readale representation of the published time
-func (p *Page) GetHumanReadablePublished() string {
-	duration := time.Now().Sub(p.Published)
-
-	days := int64(duration.Hours() / 24)
-	hours := int64(math.Mod(duration.Hours(), 24))
-
-	chunks := []struct {
-		singularName string
-		amount       int64
-	}{
-		{"day", days},
-		{"hour", hours},
-	}
-
-	parts := []string{}
-
-	for _, chunk := range chunks {
-		switch chunk.amount {
-		case 0:
-			continue
-		case 1:
-			parts = append(parts, fmt.Sprintf("%d %s", chunk.amount, chunk.singularName))
-		default:
-			parts = append(parts, fmt.Sprintf("%d %ss", chunk.amount, chunk.singularName))
-		}
-	}
-
-	return fmt.Sprintf(
-		"%s ago",
-		strings.Join(parts, " "),
-	)
-}
-
 // GetFormatPublished returns formatted published date
 func (p *Page) GetFormatPublished() string {
 	return fmt.Sprintf(
 		"%d %s %d",
 		p.Published.Day(),
-		p.Published.Month().String(),
+		p.Published.Month().String()[0:3],
 		p.Published.Year(),
 	)
 }
@@ -111,7 +76,7 @@ func (p *Page) GetShareOnTwitterLink() string {
 		)
 	}
 
-	tags := []string{"mihaiblebea"}
+	tags := []string{"MBlebea"}
 	for _, tag := range p.Tags {
 		tags = append(tags, tag)
 	}

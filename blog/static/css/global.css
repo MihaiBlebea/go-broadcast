@@ -30,6 +30,14 @@ blockquote {
     text-align: center;
 }
 
+blockquote::before {
+    content: "\"";
+}
+
+.text-article blockquote p {
+    margin-bottom: 0px;
+}
+
 .text-article {
     font-size: 1.1em;
 }

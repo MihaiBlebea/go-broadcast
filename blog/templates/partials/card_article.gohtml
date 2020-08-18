@@ -6,11 +6,14 @@
             <div><i class="fa fa-user pl-0" aria-hidden="true"></i> Mihai Blebea</div>
         </div>
 
-        <h3 class="position-absolute card-title-overlay w-100 mb-0"><strong>{{ .Title }}</strong></h3>
+        {{/* <h3 class="position-absolute card-title-overlay w-100 mb-0"><strong>{{ .Title }}</strong></h3> */}}
 
         <img src="{{ .Image }}" class="card-img-top" alt="...">
     </a>
     <div class="card-body">
+
+        <h3><strong>{{ .Title }}</strong></h3>
+
         <p class="card-text">
             {{ .Summary }}... 
             <a class="d-block" href="/article/{{ .Slug }}">Read more</a>

@@ -1,0 +1,11 @@
+.footer-social {
+    position: fixed; 
+    bottom: 0; 
+    width: 100%; 
+    min-height: 20px; 
+    background-color: var(--bg-card); 
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    text-align: center; 
+    box-shadow: -2px 11px 17px 4px black;
+}
