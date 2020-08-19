@@ -159,12 +159,12 @@ func castTagsToString(params map[string]interface{}) ([]string, error) {
 		return []string{}, errors.New("Could not convert interface to slice of interfaces")
 	}
 
-	strTags := make([]string, len(tags))
+	strTags := make([]string, 0, len(tags))
 
 	for _, tag := range tags {
 		t, ok := tag.(string)
 		if ok == false {
-			return []string{}, errors.New("Could not convert interface to string")
+			continue
 		}
 
 		strTags = append(strTags, t)
