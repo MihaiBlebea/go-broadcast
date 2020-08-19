@@ -94,14 +94,8 @@ func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	slug := vars["slug"]
 
-	params := struct {
-		Name string
-	}{
-		Name: "Zlatan",
-	}
 	h.logger.WithFields(logrus.Fields{
-		"url":    r.URL.String(),
-		"params": params,
+		"url": r.URL.String(),
 	}).Info("HTTP request started")
 	start := time.Now()
 
@@ -109,16 +103,16 @@ func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
 		"duration": time.Since(start).Nanoseconds(),
 	}).Info("HTTP request ended")
 
-	page, err := h.pageService.LoadArticlePage(slug, params)
+	page, err := h.pageService.LoadArticlePage(slug, nil)
 	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", params)
+		page, _ = h.pageService.LoadPage("/error", nil)
 		page.Render(w)
 		return
 	}
 
 	err = page.Render(w)
 	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", params)
+		page, _ = h.pageService.LoadPage("/error", nil)
 		page.Render(w)
 	}
 }

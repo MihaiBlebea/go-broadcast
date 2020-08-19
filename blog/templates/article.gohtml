@@ -49,20 +49,24 @@
             </div>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <h3 class="mb-3">More related content</h3> 
-                <div class="row">
-                    {{ range $article := .Articles }}
+        {{ if .Articles }}
 
-                        <div class="col-md-4 mb-3 mb-md-0">
-                            {{ template "card_article" $article }}
-                        </div>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h3 class="mb-3">More related content</h3> 
+                    <div class="row">
+                        {{ range $article := .Articles }}
 
-                    {{ end }}
+                            <div class="col-md-4 mb-3 mb-md-0">
+                                {{ template "card_article" $article }}
+                            </div>
+
+                        {{ end }}
+                    </div>
                 </div>
             </div>
-        </div>
+
+        {{ end }}
     </div>
 
     <script>

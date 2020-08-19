@@ -13,6 +13,14 @@
     <div class="card-body">
 
         <h3><strong>{{ .Title }}</strong></h3>
+        
+        <p>
+            {{ range $tag := .Tags }}
+
+                <span class="mr-1 tag">#{{ $tag }}</span>
+
+            {{ end }}
+        </p>
 
         <p class="card-text">
             {{ .Summary }}... 

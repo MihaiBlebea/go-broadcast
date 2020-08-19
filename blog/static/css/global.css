@@ -129,3 +129,13 @@ html.transition *:after {
     transition: all 750ms !important;
     transition-delay: 0 !important;
 }
+
+.tag {
+    background-color: #ff5733;
+    color: #fff;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 5px;
+}
