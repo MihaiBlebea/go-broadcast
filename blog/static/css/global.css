@@ -48,6 +48,15 @@ blockquote::before {
     font-size: 1.1em;
 }
 
+.text-article h2 {
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.text-article img {
+    margin-bottom: 20px;
+}
+
 .nav-link {
     color: var(--color-heading)!important;
 }
