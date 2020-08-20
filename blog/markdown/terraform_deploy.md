@@ -29,7 +29,7 @@ It's **trully amazing** how developers can master them all...
 
 I'm not going to go into a history lesson of AWS or anything like that, but let me know if this scenario sounds familiar to you?
 
-<img src="http://gph.is/1sDnkGu">
+<img src="https://media.giphy.com/media/WoWm8YzFQJg5i/giphy.gif">
 
 Let's say you are joining a new company and you are excited to start contributing to the code base.
 
