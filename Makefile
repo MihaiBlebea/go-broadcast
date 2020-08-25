@@ -48,13 +48,3 @@ tf-get:
 	cd $(TERRAFORM_PATH) && terraform get
 
 terraform: tf-init tf-plan tf-apply
-
-# Helm scripts
-
-helm-debug:
-	cd $(HELM_PATH) && helm install --generate-name --debug --dry-run .
-
-# Kubernetes scripts
-
-manual-cronjob: 
-	kubectl create job --from=cronjob/broadcast broadcast-test-02
