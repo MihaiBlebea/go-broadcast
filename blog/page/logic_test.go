@@ -58,7 +58,7 @@ func createService() (Service, error) {
 }
 
 func TestGetValidPageBySlug(t *testing.T) {
-	slug := "first-article"
+	slug := "terraform-with-kubernetes-infrastructure-as-code-part-1"
 
 	service, err := createService()
 	if err != nil {
