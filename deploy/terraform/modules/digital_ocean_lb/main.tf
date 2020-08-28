@@ -22,6 +22,40 @@ resource "digitalocean_record" "txt_google_search_console" {
     value    = var.google_search_console_code
 }
 
+# AWS SES register domain records
+resource "digitalocean_record" "aws_domain_verification_record" {
+    domain   = digitalocean_domain.mihaiblebea_com.name
+    type     = "TXT"
+    name     = "_amazonses.${digitalocean_domain.mihaiblebea_com.name}"
+    priority = 10
+    value    = var.aws_domain_verification_token
+}
+
+resource "digitalocean_record" "aws_domain_key_set_one" {
+    domain   = digitalocean_domain.mihaiblebea_com.name
+    type     = "CNAME"
+    name     = "64aonjzwf22bgfitrab5nbu6v2rqnard._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    priority = 10
+    value    = "64aonjzwf22bgfitrab5nbu6v2rqnard.dkim.amazonses.com"
+}
+
+resource "digitalocean_record" "aws_domain_key_set_two" {
+    domain   = digitalocean_domain.mihaiblebea_com.name
+    type     = "CNAME"
+    name     = "xhrue3rk4uzwfuskugzrngyxt3jloi5m._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    priority = 10
+    value    = "xhrue3rk4uzwfuskugzrngyxt3jloi5m.dkim.amazonses.com"
+}
+
+resource "digitalocean_record" "aws_domain_key_set_three" {
+    domain   = digitalocean_domain.mihaiblebea_com.name
+    type     = "CNAME"
+    name     = "i2njichgbwkz2xs2suagqzhckea7bvyd._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    priority = 10
+    value    = "i2njichgbwkz2xs2suagqzhckea7bvyd.dkim.amazonses.com"
+}
+
+
 resource "digitalocean_loadbalancer" "public" {
     name   = "loadbalancer-1"
     region = "lon1"

@@ -11,5 +11,7 @@ variable "droplet_id" {}
 
 variable "domain_name" {}
 
+variable "aws_domain_verification_token" {}
+
 
 
