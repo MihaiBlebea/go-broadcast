@@ -3,6 +3,13 @@
     <title>{{ .MetaTitle }}</title>
 
     {{ template "head" }}
+    <style>
+    .contact-img {
+        max-width: 450px;
+        display: block;
+        margin: auto;
+    }
+    </style>
 </head>
 <body>
     {{ template "navbar" }}
@@ -15,9 +22,12 @@
                 <div class="mb-4">
                     {{ template "card_author" }}
                 </div>
-
-                <p>OR better yet ➡️ <a href="mailto:mihaiserban.blebea@gmail.com" target="_blank">Send email</a></p>
-
+                
+                <img class="contact-img" src="/static/img/contact.png" />
+                <a class="text-center d-block" href="mailto:mihaiserban.blebea@gmail.com" target="_blank">
+                    <button type="button" class="btn btn-primary">Send Email</button>
+                </a>
+                
             </div>
         </div>
     </div>
