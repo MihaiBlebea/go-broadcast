@@ -69,9 +69,24 @@ jobs:
         TF_VAR_google_search_console_code: ${{ secrets.GOOGLE_SEARCH_CONSOLE_CODE }}
         TF_VAR_pocket_consumer_key: ${{ secrets.POCKET_CONSUMER_KEY }}
         TF_VAR_pocket_access_token: ${{ secrets.POCKET_ACCESS_TOKEN }}
-        TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN: ${{ secrets.TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN }}
+        TF_VAR_aws_domain_verification_token: ${{ secrets.AWS_DOMAIN_VERIFICATION_TOKEN }}
+        TF_VAR_aws_domain_key_set: ${{ secrets.AWS_DOMAIN_KEY_SET }}
 
     - name: Terraform Apply
       working-directory: ./deploy/terraform
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      run: terraform apply -auto-approve -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="broadcast_image=serbanblebea/go-broadcast:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}" -var="domain_name=${{ secrets.DOMAIN_NAME }}" -var="google_search_console_code=${{ secrets.GOOGLE_SEARCH_CONSOLE_CODE }}" -var="pocket_consumer_key=${{ secrets.POCKET_CONSUMER_KEY }}" -var="pocket_access_token=${{ secrets.POCKET_ACCESS_TOKEN }}" -var="AWS_DOMAIN_VERIFICATION_TOKEN=${{ secrets.TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN }}"
+      run: terraform apply -auto-approve
+      env:
+        TF_VAR_do_token: ${{ secrets.DO_TOKEN }}
+        TF_VAR_blog_image: serbanblebea/go-blog:${{ github.sha }}
+        TF_VAR_broadcast_image: serbanblebea/go-broadcast:${{ github.sha }}
+        TF_VAR_linkedin_access_token: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+        TF_VAR_twitter_consumer_key: ${{ secrets.TWITTER_CONSUMER_KEY }}
+        TF_VAR_twitter_consumer_secret: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+        TF_VAR_twitter_token: ${{ secrets.TWITTER_TOKEN }}
+        TF_VAR_twitter_token_secret: ${{ secrets.TWITTER_TOKEN_SECRET }}
+        TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
+        TF_VAR_google_search_console_code: ${{ secrets.GOOGLE_SEARCH_CONSOLE_CODE }}
+        TF_VAR_pocket_consumer_key: ${{ secrets.POCKET_CONSUMER_KEY }}
+        TF_VAR_pocket_access_token: ${{ secrets.POCKET_ACCESS_TOKEN }}
+        TF_VAR_aws_domain_verification_token: ${{ secrets.AWS_DOMAIN_VERIFICATION_TOKEN }}

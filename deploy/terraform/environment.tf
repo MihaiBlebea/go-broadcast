@@ -22,4 +22,8 @@ variable "domain_name" {}
 
 variable "google_search_console_code" {}
 
-variable "AWS_DOMAIN_VERIFICATION_TOKEN" {}
+variable "aws_domain_verification_token" {}
+
+variable "aws_domain_key_set" {
+    type = "list"
+}

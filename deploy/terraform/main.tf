@@ -23,7 +23,8 @@ module "digital_ocean_lb" {
     google_search_console_code = var.google_search_console_code
     droplet_id                 = module.digital_ocean.droplet_id
 
-    aws_domain_verification_token = var.AWS_DOMAIN_VERIFICATION_TOKEN
+    aws_domain_verification_token = var.aws_domain_verification_token
+    aws_domain_key_set            = var.aws_domain_key_set
 }
 
 module "kubernetes" {
