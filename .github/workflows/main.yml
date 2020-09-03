@@ -55,8 +55,10 @@ jobs:
       
     - name: Terraform Plan
       working-directory: ./deploy/terraform
-      run: terraform plan -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="broadcast_image=serbanblebea/go-broadcast:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}" -var="domain_name=${{ secrets.DOMAIN_NAME }}" -var="google_search_console_code=${{ secrets.GOOGLE_SEARCH_CONSOLE_CODE }}" -var="pocket_consumer_key=${{ secrets.POCKET_CONSUMER_KEY }}" -var="pocket_access_token=${{ secrets.POCKET_ACCESS_TOKEN }}" -var="AWS_DOMAIN_VERIFICATION_TOKEN=${{ secrets.TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN }}"
-    
+      run: terraform plan -var="do_token=${{ secrets.DO_TOKEN }}" -var="blog_image=serbanblebea/go-blog:${{ github.sha }}" -var="broadcast_image=serbanblebea/go-broadcast:${{ github.sha }}" -var="linkedin_access_token=${{ secrets.LINKEDIN_ACCESS_TOKEN }}" -var="twitter_consumer_key=${{ secrets.TWITTER_CONSUMER_KEY }}" -var="twitter_consumer_secret=${{ secrets.TWITTER_CONSUMER_SECRET }}" -var="twitter_token=${{ secrets.TWITTER_TOKEN }}" -var="twitter_token_secret=${{ secrets.TWITTER_TOKEN_SECRET }}" -var="domain_name=${{ secrets.DOMAIN_NAME }}" -var="google_search_console_code=${{ secrets.GOOGLE_SEARCH_CONSOLE_CODE }}" -var="pocket_consumer_key=${{ secrets.POCKET_CONSUMER_KEY }}" -var="pocket_access_token=${{ secrets.POCKET_ACCESS_TOKEN }}"
+      env:
+        TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN: ${{ secrets.TF_VAR_AWS_DOMAIN_VERIFICATION_TOKEN }}
+
     - name: Terraform Apply
       working-directory: ./deploy/terraform
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
