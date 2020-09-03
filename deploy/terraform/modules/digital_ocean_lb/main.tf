@@ -38,7 +38,7 @@ resource "digitalocean_record" "aws_domain_key_set_one" {
     name     = "${var.aws_domain_key_set[0]}._domainkey"
     priority = 10
     # value    = "64aonjzwf22bgfitrab5nbu6v2rqnard.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[0]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[0]}.dkim.amazonses.com."
 }
 
 resource "digitalocean_record" "aws_domain_key_set_two" {
@@ -48,7 +48,7 @@ resource "digitalocean_record" "aws_domain_key_set_two" {
     name     = "${var.aws_domain_key_set[1]}._domainkey"
     priority = 10
     # value    = "xhrue3rk4uzwfuskugzrngyxt3jloi5m.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[1]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[1]}.dkim.amazonses.com."
 }
 
 resource "digitalocean_record" "aws_domain_key_set_three" {
@@ -58,7 +58,7 @@ resource "digitalocean_record" "aws_domain_key_set_three" {
     name     = "${var.aws_domain_key_set[2]}._domainkey"
     priority = 10
     # value    = "i2njichgbwkz2xs2suagqzhckea7bvyd.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[2]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[2]}.dkim.amazonses.com."
 }
 
 # ["64aonjzwf22bgfitrab5nbu6v2rqnard","xhrue3rk4uzwfuskugzrngyxt3jloi5m","i2njichgbwkz2xs2suagqzhckea7bvyd"]
