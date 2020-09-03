@@ -14,6 +14,6 @@ variable "domain_name" {}
 variable "aws_domain_verification_token" {}
 
 variable "aws_domain_key_set" {
-    type = "list"
+    type = list(string)
 }
 

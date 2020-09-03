@@ -61,7 +61,7 @@ resource "digitalocean_record" "aws_domain_key_set_three" {
     value    = "${var.aws_domain_key_set[2]}.dkim.amazonses.com"
 }
 
-# "['64aonjzwf22bgfitrab5nbu6v2rqnard', 'xhrue3rk4uzwfuskugzrngyxt3jloi5m', 'i2njichgbwkz2xs2suagqzhckea7bvyd']"
+# ["64aonjzwf22bgfitrab5nbu6v2rqnard","xhrue3rk4uzwfuskugzrngyxt3jloi5m","i2njichgbwkz2xs2suagqzhckea7bvyd"]
 
 resource "digitalocean_loadbalancer" "public" {
     name   = "loadbalancer-1"
