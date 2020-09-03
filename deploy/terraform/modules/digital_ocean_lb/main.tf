@@ -26,7 +26,7 @@ resource "digitalocean_record" "txt_google_search_console" {
 resource "digitalocean_record" "aws_domain_verification_record" {
     domain   = digitalocean_domain.mihaiblebea_com.name
     type     = "TXT"
-    name     = "_amazonses.${digitalocean_domain.mihaiblebea_com.name}"
+    name     = "_amazonses"
     priority = 10
     value    = var.aws_domain_verification_token
 }
@@ -35,30 +35,30 @@ resource "digitalocean_record" "aws_domain_key_set_one" {
     domain   = digitalocean_domain.mihaiblebea_com.name
     type     = "CNAME"
     # name     = "64aonjzwf22bgfitrab5nbu6v2rqnard._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
-    name     = "${var.aws_domain_key_set[0]}._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    name     = "${var.aws_domain_key_set[0]}._domainkey"
     priority = 10
     # value    = "64aonjzwf22bgfitrab5nbu6v2rqnard.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[0]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[0]}.dkim.amazonses.com."
 }
 
 resource "digitalocean_record" "aws_domain_key_set_two" {
     domain   = digitalocean_domain.mihaiblebea_com.name
     type     = "CNAME"
     # name     = "xhrue3rk4uzwfuskugzrngyxt3jloi5m._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
-    name     = "${var.aws_domain_key_set[1]}._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    name     = "${var.aws_domain_key_set[1]}._domainkey"
     priority = 10
     # value    = "xhrue3rk4uzwfuskugzrngyxt3jloi5m.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[1]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[1]}.dkim.amazonses.com."
 }
 
 resource "digitalocean_record" "aws_domain_key_set_three" {
     domain   = digitalocean_domain.mihaiblebea_com.name
     type     = "CNAME"
     # name     = "i2njichgbwkz2xs2suagqzhckea7bvyd._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
-    name     = "${var.aws_domain_key_set[2]}._domainkey.${digitalocean_domain.mihaiblebea_com.name}"
+    name     = "${var.aws_domain_key_set[2]}._domainkey"
     priority = 10
     # value    = "i2njichgbwkz2xs2suagqzhckea7bvyd.dkim.amazonses.com"
-    value    = "${var.aws_domain_key_set[2]}.dkim.amazonses.com"
+    value    = "${var.aws_domain_key_set[2]}.dkim.amazonses.com."
 }
 
 # ["64aonjzwf22bgfitrab5nbu6v2rqnard","xhrue3rk4uzwfuskugzrngyxt3jloi5m","i2njichgbwkz2xs2suagqzhckea7bvyd"]
