@@ -1,6 +1,6 @@
 ---
 Title: Github for absolute beginners - How to get started with your first repo?
-Summary: Summary
+Summary: If you just started to code, then git is not for you... That's what they told me. But does it still apply today?
 Image: /static/img/github.jpeg
 Tags:
     - github
