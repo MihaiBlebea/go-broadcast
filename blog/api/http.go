@@ -2,14 +2,13 @@ package api
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path"
-	"time"
 
 	"github.com/MihaiBlebea/blog/go-broadcast/page"
 	"github.com/gorilla/mux"
-	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,8 +21,7 @@ type httpServer struct {
 // HTTPServer interface
 type HTTPServer interface {
 	GetHandler() http.Handler
-	BlogHandler(w http.ResponseWriter, r *http.Request)
-	ArticleHandler(w http.ResponseWriter, r *http.Request)
+	TemplateHandler(w http.ResponseWriter, r *http.Request)
 }
 
 // NewHTTPServer returns a new http server service
@@ -34,12 +32,6 @@ func NewHTTPServer(pageService page.Service, logger *logrus.Logger) HTTPServer {
 	}
 
 	r := mux.NewRouter()
-
-	r.Methods("GET").Path("/").HandlerFunc(httpServer.BlogHandler)
-	r.Methods("GET").Path("/article/{slug}").HandlerFunc(httpServer.ArticleHandler)
-	r.Methods("GET").Path("/contact").HandlerFunc(httpServer.GetContactHandler)
-
-	r.Methods("GET").Path("/about").HandlerFunc(httpServer.GetAboutHandler)
 
 	r.PathPrefix("/static/").Handler(
 		http.StripPrefix(
@@ -52,116 +44,23 @@ func NewHTTPServer(pageService page.Service, logger *logrus.Logger) HTTPServer {
 		),
 	)
 
-	middlewareCORS := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowCredentials: true,
-		AllowedMethods:   []string{"GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"},
-		AllowedHeaders:   []string{"Authorization", "Content-Type"},
-		// Enable Debugging for testing, consider disabling in production
-		Debug: false,
-	})
+	r.PathPrefix("/").HandlerFunc(httpServer.TemplateHandler)
 
-	httpServer.handler = middlewareCORS.Handler(r)
+	httpServer.handler = r
 
 	return &httpServer
 }
 
-func (h *httpServer) BlogHandler(w http.ResponseWriter, r *http.Request) {
-	h.logger.WithFields(logrus.Fields{
-		"url": r.URL.String(),
-	}).Info("HTTP request started")
-	start := time.Now()
-
-	defer h.logger.WithFields(logrus.Fields{
-		"duration": time.Since(start).Nanoseconds(),
-	}).Info("HTTP request ended")
-
-	page, err := h.pageService.LoadBlogPage("/", nil)
+func (h *httpServer) TemplateHandler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
+	page, err := h.pageService.LoadTemplate(path)
 	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-		return
+		log.Fatal(err)
 	}
 
 	err = page.Render(w)
 	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-	}
-}
-
-func (h *httpServer) ArticleHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	slug := vars["slug"]
-
-	h.logger.WithFields(logrus.Fields{
-		"url": r.URL.String(),
-	}).Info("HTTP request started")
-	start := time.Now()
-
-	defer h.logger.WithFields(logrus.Fields{
-		"duration": time.Since(start).Nanoseconds(),
-	}).Info("HTTP request ended")
-
-	page, err := h.pageService.LoadArticlePage(slug, nil)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-		return
-	}
-
-	err = page.Render(w)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-	}
-}
-
-func (h *httpServer) GetContactHandler(w http.ResponseWriter, r *http.Request) {
-	h.logger.WithFields(logrus.Fields{
-		"url": r.URL.String(),
-	}).Info("HTTP request started")
-	start := time.Now()
-
-	defer h.logger.WithFields(logrus.Fields{
-		"duration": time.Since(start).Nanoseconds(),
-	}).Info("HTTP request ended")
-
-	page, err := h.pageService.LoadPage("contact", nil)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-		return
-	}
-
-	err = page.Render(w)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-	}
-}
-
-func (h *httpServer) GetAboutHandler(w http.ResponseWriter, r *http.Request) {
-	h.logger.WithFields(logrus.Fields{
-		"url": r.URL.String(),
-	}).Info("HTTP request started")
-	start := time.Now()
-
-	defer h.logger.WithFields(logrus.Fields{
-		"duration": time.Since(start).Nanoseconds(),
-	}).Info("HTTP request ended")
-
-	page, err := h.pageService.LoadPage("about", nil)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
-		return
-	}
-
-	err = page.Render(w)
-	if err != nil {
-		page, _ = h.pageService.LoadPage("/error", nil)
-		page.Render(w)
+		log.Fatal(err)
 	}
 }
 

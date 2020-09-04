@@ -1,141 +1,124 @@
 package page
 
 import (
-	"fmt"
 	"html/template"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"sort"
+	"strings"
 
-	"github.com/MihaiBlebea/blog/go-broadcast/assets"
 	"github.com/MihaiBlebea/blog/go-broadcast/cache"
+	"github.com/MihaiBlebea/blog/go-broadcast/post"
 	"github.com/sirupsen/logrus"
 )
 
 type service struct {
-	markdownService Markdown
-	cache           *cache.Cache
-	logger          *logrus.Logger
+	postService post.Service
+	cache       *cache.Cache
+	logger      *logrus.Logger
 }
 
 // New returns a new page service
-func New(markdownService Markdown, cache *cache.Cache, logger *logrus.Logger) Service {
+func New(postService post.Service, cache *cache.Cache, logger *logrus.Logger) Service {
 	return &service{
-		markdownService: markdownService,
-		cache:           cache,
-		logger:          logger,
+		postService: postService,
+		cache:       cache,
+		logger:      logger,
 	}
 }
 
-func (s *service) getPartials(folder string) (string, error) {
-	partials, err := assets.AssetDir(folder)
+func (s *service) LoadStaticFile(URL string) ([]byte, error) {
+	b, err := ioutil.ReadFile(URL)
 	if err != nil {
-		return "", err
+		return []byte{}, err
 	}
 
-	var result string
-	for _, partial := range partials {
-		b, err := assets.Asset(
-			fmt.Sprintf("%s/%s", folder, partial),
-		)
+	return b, nil
+}
+
+func (s *service) LoadTemplate(URL string) (*Page, error) {
+	var template string
+	var params interface{}
+
+	if URL == "/" {
+		template = "index"
+		posts, err := s.postService.GetAllPosts()
 		if err != nil {
-			return "", err
+			return &Page{}, err
 		}
 
-		result += string(b)
-	}
+		p := *posts
 
-	return result, nil
-}
+		sort.SliceStable(p, func(i, j int) bool {
+			return p[i].Published.After(p[j].Published)
+		})
 
-func (s *service) LoadPage(slug string, optionalParams interface{}) (*Page, error) {
-	p, err := s.cache.FindPage(slug)
-	if err != nil {
-		return &Page{}, err
-	}
-	page := p.(Page)
-
-	lb, err := assets.Asset(
-		fmt.Sprintf("templates/%s.gohtml", page.Layout),
-	)
-	if err != nil {
-		return &Page{}, err
-	}
-
-	partials, err := s.getPartials("templates/partials")
-	if err != nil {
-		return &Page{}, err
-	}
-
-	tmpl, err := template.New("Template").Parse(
-		partials + string(lb),
-	)
-	if err != nil {
-		return &Page{}, err
-	}
-
-	page.Params = optionalParams
-	page.Template = tmpl
-
-	return &page, nil
-}
-
-func (s *service) LoadBlogPage(slug string, optionalParams interface{}) (*Page, error) {
-	page, err := s.LoadPage(slug, optionalParams)
-	if err != nil {
-		return &Page{}, err
-	}
-
-	for _, p := range s.cache.All() {
-		article := p.(Page)
-		if article.Kind == kindArticle {
-			page.Articles = append(page.Articles, &article)
+		params = struct {
+			Articles *[]post.Post
+		}{
+			Articles: &p,
 		}
-	}
-
-	sort.SliceStable(page.Articles, func(i, j int) bool {
-		return page.Articles[i].Published.After(page.Articles[j].Published)
-	})
-
-	return page, err
-}
-
-func (s *service) LoadArticlePage(slug string, optionalParams interface{}) (*Page, error) {
-	page, err := s.LoadPage(slug, optionalParams)
-	if err != nil {
-		return &Page{}, err
-	}
-
-	for _, p := range s.cache.All() {
-		article := p.(Page)
-
-		// If the related article is the same with the main one,
-		// or if the page is not actually an article, then just go to the next one
-		if article.Slug == page.Slug || article.Kind != kindArticle {
-			continue
+	} else if strings.Contains(URL, "/article") {
+		template = "article"
+		posts, err := s.postService.GetAllPosts()
+		if err != nil {
+			return &Page{}, err
 		}
 
-		// Allow just 3 related articles,
-		// there is no point to keep looping after we hit that number
-		if len(page.Articles) == 3 {
-			break
-		}
+		slug := strings.Replace(URL, "/article/", "", -1)
 
-		for _, tag := range page.Tags {
-			if contains(article.Tags, tag) {
-				page.Articles = append(page.Articles, &article)
-				break
+		var p post.Post
+		for _, post := range *posts {
+			if post.Slug == slug {
+				p = post
 			}
 		}
+
+		params = struct {
+			Articles *[]post.Post
+			Article  *post.Post
+		}{
+			Articles: posts,
+			Article:  &p,
+		}
+	} else {
+		template = strings.Split(URL[1:], "/")[0]
+		params = nil
 	}
 
-	return page, err
+	return s.loadPage(template, params)
 }
 
-func contains(list []string, needle string) bool {
-	for _, item := range list {
-		if item == needle {
-			return true
-		}
+func (s *service) loadPage(templateName string, params interface{}) (*Page, error) {
+	tmpl, err := s.parseTemplates()
+	if err != nil {
+		return &Page{}, err
 	}
 
-	return false
+	return &Page{
+		Params:       params,
+		Template:     tmpl,
+		TemplateName: templateName,
+	}, nil
+}
+
+func (s *service) parseTemplates() (*template.Template, error) {
+	templ := template.New("")
+	err := filepath.Walk("./static/templates", func(path string, info os.FileInfo, err error) error {
+		if strings.Contains(path, ".gohtml") {
+			_, err = templ.ParseFiles(path)
+			if err != nil {
+				return err
+			}
+		}
+
+		return err
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return templ, nil
 }

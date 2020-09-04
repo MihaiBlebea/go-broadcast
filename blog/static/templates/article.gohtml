@@ -1,25 +1,28 @@
+{{ $article := .Params.Article }}
+{{ $articles := .Params.Articles }}
+
 <html data-theme="light">
 <head>
-    <title>{{ .MetaTitle }}</title>
+    <title>{{ .Params.Article.Title }} | MihaiBlebea.com</title>
 
     {{ template "head" }}
 
     <!-- Share on Linkedin -->
-    <meta property='og:title' content='{{ .Title }}'/>
-    <meta property='og:image' content='{{ .Image }}'/>
-    <meta property='og:description' content='{{ .Summary }}'/>
-    <meta property='og:url' content='https://mihaiblebea.com/article/{{ .Slug }}'/>
+    <meta property='og:title' content='{{ $article.Title }}'/>
+    <meta property='og:image' content='{{ $article.Image }}'/>
+    <meta property='og:description' content='{{ $article.Summary }}'/>
+    <meta property='og:url' content='https://mihaiblebea.com/article/{{ $article.Slug }}'/>
     <meta property='author' content='Mihai Blebea'/>
-    <meta name="publish_date" property="og:publish_date" content="{{ .Published }}">
+    <meta name="publish_date" property="og:publish_date" content="{{ $article.Published }}">
 
     <!-- Share on Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:site" content="@MBlebea" />
     <meta property="twitter:creator" content="@MBlebea" />
-    <meta property="twitter:title" content="{{ .Title }}">
-    <meta property="twitter:description" content="{{ .Summary }}">
-    <meta property="twitter:image" content="{{ .Image }}">
-    <meta property='twitter:url' content='https://mihaiblebea.com/article/{{ .Slug }}'/>
+    <meta property="twitter:title" content="{{ $article.Title }}">
+    <meta property="twitter:description" content="{{ $article.Summary }}">
+    <meta property="twitter:image" content="{{ $article.Image }}">
+    <meta property='twitter:url' content='https://mihaiblebea.com/article/{{ $article.Slug }}'/>
 
     <link rel="stylesheet" href="/static/css/footer-social.css"/>
 
@@ -34,31 +37,31 @@
                     <i class="fa fa-arrow-left pl-0" aria-hidden="true"></i> Blog
                 </a>
 
-                <h1 class="mb-4">{{ .Title }}</h1>
+                <h1 class="mb-4">{{ $article.Title }}</h1>
 
                 <div class="mb-4">
                     {{ template "card_author" }}
                 </div>
 
-                <img class="mb-3 w-100" src="{{ .Image }}" />
-                <p>Published {{ .GetFormatPublished }}</p>
+                <img class="mb-3 w-100" src="{{ $article.Image }}" />
+                <p>Published {{ $article.GetFormatPublished }}</p>
 
-                <div class="text-article">{{ .HTML }}</div>
+                <div class="text-article">{{ $article.HTML }}</div>
 
                 <div id="disqus_thread"></div>
             </div>
         </div>
 
-        {{ if .Articles }}
+        {{ if $articles }}
 
             <div class="row justify-content-center">
                 <div class="col-12">
                     <h3 class="mb-3">More related content</h3> 
                     <div class="row">
-                        {{ range $article := .Articles }}
+                        {{ range $art := $articles }}
 
                             <div class="col-md-4 mb-3 mb-md-0">
-                                {{ template "card_article" $article }}
+                                {{ template "card_article" $art }}
                             </div>
 
                         {{ end }}
@@ -91,9 +94,9 @@
     <!-- Share article footer -->
     <script src="/static/js/footer-social.js"></script>
     <script>
-        const linkedinUrl = '{{ .GetShareOnLinkedinLink }}'
-        const facebookUrl = '{{ .GetShareOnFacebookLink }}'
-        const twitterUrl = '{{ .GetShareOnTwitterLink }}'
+        const linkedinUrl = '{{ $article.GetShareOnLinkedinLink }}'
+        const facebookUrl = '{{ $article.GetShareOnFacebookLink }}'
+        const twitterUrl = '{{ $article.GetShareOnTwitterLink }}'
         const footerId = 'social-footer'
 
         let social = new SocialFooter({

@@ -4,121 +4,18 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"strings"
-	"time"
-)
-
-const format = "2006-01-02 15:04:05"
-
-type kind int
-
-const (
-	kindArticle kind = iota
-	kindPage
 )
 
 // Page model
 type Page struct {
-	HTML      template.HTML
-	Params    interface{}
-	MetaTitle string
-	Image     string
-	Title     string
-	Slug      string
-	Summary   string
-	Tags      []string
-	Template  *template.Template
-	Layout    string
-	Published time.Time
-	Articles  []*Page
-	Kind      kind
+	Params       interface{}
+	Template     *template.Template
+	TemplateName string
 }
 
 // Render the page
 func (p *Page) Render(w io.Writer) error {
-	err := p.Template.Execute(w, p)
-	if err != nil {
-		return err
-	}
+	file := fmt.Sprintf("%s.gohtml", p.TemplateName)
 
-	return nil
-}
-
-// SetPublished set publish time from string
-func (p *Page) SetPublished(date string) error {
-	published, err := time.Parse(format, date)
-	if err != nil {
-		return err
-	}
-
-	p.Published = published
-
-	return nil
-}
-
-// GetFormatPublished returns formatted published date
-func (p *Page) GetFormatPublished() string {
-	return fmt.Sprintf(
-		"%d %s %d",
-		p.Published.Day(),
-		p.Published.Month().String()[0:3],
-		p.Published.Year(),
-	)
-}
-
-// GetShareOnTwitterLink returns a link pre-polulated from the content of the page
-func (p *Page) GetShareOnTwitterLink() string {
-	slug := p.Slug
-	if p.Kind == kindArticle {
-		slug = fmt.Sprintf(
-			"article/%s",
-			p.Slug,
-		)
-	}
-
-	tags := []string{"MBlebea"}
-	for _, tag := range p.Tags {
-		tags = append(tags, tag)
-	}
-
-	return fmt.Sprintf(
-		"http://twitter.com/share?text=%s&url=https://mihaiblebea.com/%s&hashtags=%s",
-		p.Summary,
-		slug,
-		strings.Join(tags, ","),
-	)
-}
-
-// GetShareOnFacebookLink returns a link for sharring the post on facebook
-func (p *Page) GetShareOnFacebookLink() string {
-	slug := p.Slug
-	if p.Kind == kindArticle {
-		slug = fmt.Sprintf(
-			"article/%s",
-			p.Slug,
-		)
-	}
-
-	return fmt.Sprintf(
-		"https://www.facebook.com/sharer/sharer.php?u=https://mihaiblebea.com/%s",
-		slug,
-	)
-}
-
-// GetShareOnLinkedinLink returns a link for sharing the post on linkedin
-func (p *Page) GetShareOnLinkedinLink() string {
-	slug := p.Slug
-	if p.Kind == kindArticle {
-		slug = fmt.Sprintf(
-			"article/%s",
-			p.Slug,
-		)
-	}
-
-	return fmt.Sprintf(
-		"https://www.linkedin.com/shareArticle?mini=true&url=https://mihaiblebea.com/%s&title=%s&summary=%s&source=",
-		slug,
-		p.Title,
-		p.Summary,
-	)
+	return p.Template.ExecuteTemplate(w, file, p)
 }

@@ -16,7 +16,7 @@ open:
 
 # Docker scripts
 
-build-up: bundle build up open
+build-up: build up open
 
 build:
 	cd $(DOCKER_PATH) && docker-compose build --no-cache
