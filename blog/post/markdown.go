@@ -1,9 +1,11 @@
-package page
+package post
 
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"html/template"
+	"io/ioutil"
 
 	"github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
@@ -22,14 +24,8 @@ type markdown struct {
 	parser goldmark.Markdown
 }
 
-// Markdown interface
-type Markdown interface {
-	MarkdownToHTML(content []byte) (template.HTML, error)
-	BuildPage(content []byte) (*Page, error)
-}
-
-// NewMarkdown returns a new markdown service
-func NewMarkdown() Markdown {
+// New returns a new markdown service
+func New() Service {
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			meta.Meta,
@@ -53,48 +49,60 @@ func NewMarkdown() Markdown {
 	return &markdown{md}
 }
 
-func (m *markdown) MarkdownToHTML(content []byte) (template.HTML, error) {
-	context := parser.NewContext()
-
-	var buf bytes.Buffer
-	err := m.parser.Convert(content, &buf, parser.WithContext(context))
+func (m *markdown) GetAllPosts() (*[]Post, error) {
+	files, err := ioutil.ReadDir("./static/markdown")
 	if err != nil {
-		return "", err
+		return &[]Post{}, err
 	}
 
-	return template.HTML(buf.String()), nil
+	var posts []Post
+	for _, f := range files {
+		p, err := m.BuildPost(
+			fmt.Sprintf(
+				"./static/markdown/%s",
+				f.Name(),
+			),
+		)
+		if err != nil {
+			return &posts, err
+		}
+
+		posts = append(posts, *p)
+	}
+
+	return &posts, nil
 }
 
-func (m *markdown) BuildPage(content []byte) (*Page, error) {
+func (m *markdown) BuildPost(filePath string) (*Post, error) {
 	context := parser.NewContext()
 
-	var buf bytes.Buffer
-	err := m.parser.Convert(content, &buf, parser.WithContext(context))
+	b, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		return &Page{}, err
+		return &Post{}, err
+	}
+
+	var buf bytes.Buffer
+	err = m.parser.Convert(b, &buf, parser.WithContext(context))
+	if err != nil {
+		return &Post{}, err
 	}
 
 	params := meta.Get(context)
 	title, ok := params["Title"].(string)
 	if ok != true {
-		return &Page{}, ErrInvalidType
+		return &Post{}, ErrInvalidType
 	}
 
 	slug, ok := params["Slug"].(string)
 	if ok != true {
-		return &Page{}, ErrInvalidType
-	}
-
-	layout, ok := params["Layout"].(string)
-	if ok != true {
-		return &Page{}, ErrInvalidType
+		return &Post{}, ErrInvalidType
 	}
 
 	var image string
 	if _, ok := params["Image"]; ok != false {
 		image, ok = params["Image"].(string)
 		if ok != true {
-			return &Page{}, ErrInvalidType
+			return &Post{}, ErrInvalidType
 		}
 	}
 
@@ -102,7 +110,7 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 	if _, ok := params["Summary"]; ok != false {
 		summary, ok = params["Summary"].(string)
 		if ok != true {
-			return &Page{}, ErrInvalidType
+			return &Post{}, ErrInvalidType
 		}
 	}
 
@@ -110,38 +118,22 @@ func (m *markdown) BuildPage(content []byte) (*Page, error) {
 	if _, ok := params["Published"]; ok != false {
 		published, ok = params["Published"].(string)
 		if ok != true {
-			return &Page{}, ErrInvalidType
+			return &Post{}, ErrInvalidType
 		}
-	}
-
-	var kind kind
-	k, ok := params["Kind"].(string)
-	if ok != true {
-		return &Page{}, ErrInvalidType
-	}
-
-	switch k {
-	case "article":
-		kind = kindArticle
-	default:
-		kind = kindPage
 	}
 
 	tags, err := castTagsToString(params)
 	if err != nil {
-		return &Page{}, err
+		return &Post{}, err
 	}
 
-	p := &Page{
-		MetaTitle: title,
-		Title:     title,
-		Slug:      slug,
-		Summary:   summary,
-		Image:     image,
-		Layout:    layout,
-		HTML:      template.HTML(buf.String()),
-		Tags:      tags,
-		Kind:      kind,
+	p := &Post{
+		Title:   title,
+		Slug:    slug,
+		Summary: summary,
+		Image:   image,
+		HTML:    template.HTML(buf.String()),
+		Tags:    tags,
 	}
 
 	p.SetPublished(published)
@@ -156,7 +148,7 @@ func castTagsToString(params map[string]interface{}) ([]string, error) {
 
 	tags, ok := params["Tags"].([]interface{})
 	if ok == false {
-		return []string{}, errors.New("Could not convert interface to slice of interfaces")
+		return []string{}, ErrInvalidType
 	}
 
 	strTags := make([]string, 0, len(tags))

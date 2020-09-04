@@ -1,5 +1,5 @@
 
-setup: bundle run
+setup: run
 
 bundle:
 	go-bindata -o=assets/bindata.go --pkg=assets templates/... markdown/...

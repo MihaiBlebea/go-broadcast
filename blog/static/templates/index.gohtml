@@ -1,6 +1,6 @@
 <html data-theme="dark">
 <head>
-    <title>{{ .MetaTitle }}</title>
+    <title>Blog | MihaiBlebea.com</title>
 
     {{ template "head" }}
 </head>
@@ -10,9 +10,9 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <h1 class="mb-4">{{ .Title }}</h1>
+                <h1 class="mb-4">Blog</h1>
 
-                {{ range $article := .Articles }}
+                {{ range $article := .Params.Articles }}
 
                     <div class="mb-4">
                         {{ template "card_article" $article }}
