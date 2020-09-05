@@ -7,10 +7,8 @@ Tags:
     - repo
     - coding
     - devops
-Layout: article
 Slug: github-for-beginners-first-repository
 Published: "2020-08-27 10:04:05"
-Kind: article
 ---
 "If you just started to code, then git is not for you..."
 

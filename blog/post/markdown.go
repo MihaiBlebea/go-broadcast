@@ -17,15 +17,17 @@ import (
 
 // Errors
 var (
-	ErrInvalidType = errors.New("Invalid type while converting from interface")
+	ErrInvalidType      = errors.New("Invalid type while converting from interface")
+	ErrPostNotPublished = errors.New("Post was not published yet")
 )
 
 type markdown struct {
 	parser goldmark.Markdown
+	isDev  bool
 }
 
 // New returns a new markdown service
-func New() Service {
+func New(isDev bool) Service {
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			meta.Meta,
@@ -46,7 +48,7 @@ func New() Service {
 		),
 	)
 
-	return &markdown{md}
+	return &markdown{md, isDev}
 }
 
 func (m *markdown) GetAllPosts() (*[]Post, error) {
@@ -57,12 +59,16 @@ func (m *markdown) GetAllPosts() (*[]Post, error) {
 
 	var posts []Post
 	for _, f := range files {
-		p, err := m.BuildPost(
+		p, err := m.buildPost(
 			fmt.Sprintf(
 				"./static/markdown/%s",
 				f.Name(),
 			),
 		)
+		if err == ErrPostNotPublished {
+			continue
+		}
+
 		if err != nil {
 			return &posts, err
 		}
@@ -73,7 +79,7 @@ func (m *markdown) GetAllPosts() (*[]Post, error) {
 	return &posts, nil
 }
 
-func (m *markdown) BuildPost(filePath string) (*Post, error) {
+func (m *markdown) buildPost(filePath string) (*Post, error) {
 	context := parser.NewContext()
 
 	b, err := ioutil.ReadFile(filePath)
@@ -88,6 +94,19 @@ func (m *markdown) BuildPost(filePath string) (*Post, error) {
 	}
 
 	params := meta.Get(context)
+
+	var published string
+	if _, ok := params["Published"]; ok != false {
+		published, ok = params["Published"].(string)
+		if ok != true {
+			return &Post{}, ErrInvalidType
+		}
+	}
+
+	if published == "" && m.isDev == false {
+		return &Post{}, ErrPostNotPublished
+	}
+
 	title, ok := params["Title"].(string)
 	if ok != true {
 		return &Post{}, ErrInvalidType
@@ -109,14 +128,6 @@ func (m *markdown) BuildPost(filePath string) (*Post, error) {
 	var summary string
 	if _, ok := params["Summary"]; ok != false {
 		summary, ok = params["Summary"].(string)
-		if ok != true {
-			return &Post{}, ErrInvalidType
-		}
-	}
-
-	var published string
-	if _, ok := params["Published"]; ok != false {
-		published, ok = params["Published"].(string)
 		if ok != true {
 			return &Post{}, ErrInvalidType
 		}

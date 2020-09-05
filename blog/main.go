@@ -17,7 +17,9 @@ func main() {
 	logger.SetFormatter(&logrus.JSONFormatter{})
 
 	cache := cache.New()
-	postService := post.New()
+	postService := post.New(
+		isDev(),
+	)
 	pageService := page.New(postService, cache, logger)
 
 	server := api.NewHTTPServer(pageService, logger)
@@ -29,4 +31,12 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+}
+
+func isDev() bool {
+	if os.Getenv("DEV") == "true" {
+		return true
+	}
+
+	return false
 }

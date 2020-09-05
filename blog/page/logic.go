@@ -77,11 +77,19 @@ func (s *service) LoadTemplate(URL string) (*Page, error) {
 			}
 		}
 
+		var relatedPosts []post.Post
+		for i, post := range *posts {
+			if i == 3 {
+				break
+			}
+			relatedPosts = append(relatedPosts, post)
+		}
+
 		params = struct {
 			Articles *[]post.Post
 			Article  *post.Post
 		}{
-			Articles: posts,
+			Articles: &relatedPosts,
 			Article:  &p,
 		}
 	} else {
