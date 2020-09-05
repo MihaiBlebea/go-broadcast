@@ -172,45 +172,49 @@ resource "kubernetes_deployment" "broadcast-deployment" {
     }
 }
 
-# resource "kubernetes_cron_job" "broadcast" {
-#     metadata {
-#         name      = "broadcast"
-#         namespace = "mihaiblebea"
-#     }
+resource "kubernetes_deployment" "list-deployment" {
+    metadata {
+        name      = "list-deployment"
+        namespace = "mihaiblebea"
+        labels    = {
+            app  = "go-broadcast"
+            name = "list-deployment"
+        }
+    }
 
-#     spec {
-#         concurrency_policy            = "Replace"
-#         failed_jobs_history_limit     = 5
-#         schedule                      = "* * * * *"
-#         starting_deadline_seconds     = 10
-#         successful_jobs_history_limit = 10
-#         suspend                       = true
+    spec {
+        replicas = 1
 
-#         job_template {
-#             metadata {}
+        selector {
+            match_labels = {
+                app  = "go-broadcast"
+                name = "list-pod"
+            }
+        }
 
-#             spec {
-#                 backoff_limit              = 2
-#                 ttl_seconds_after_finished = 10
+        template {
+            metadata {
+                name   = "list-pod"
+                labels = {
+                    app  = "go-broadcast"
+                    name = "list-pod"
+                }
+            }
 
-#                 template {
-#                     metadata {}
-
-#                     spec {
-#                         container {
-#                             name    = "broadcast"
-#                             image   = var.broadcast_image
-#                             # command = ["/bin/sh", "-c", "date; echo Hello from the Kubernetes cluster"]
-
-#                             env_from {
-#                                 secret_ref {
-#                                     name = "prod-secrets"
-#                                 }
-#                             }
-#                         }
-#                     }
-#                 }
-#             }
-#         }
-#     }
-# }
+            spec {
+                container {
+                    image = var.list_image
+                    name  = "list-container"
+                    env {
+                        name  = "GOOGLE_CREDENTIALS_FILE"
+                        value = var.google_credentials_file
+                    }
+                    env {
+                        name  = "GOOGLE_TOKEN_FILE"
+                        value = var.google_token_file
+                    }
+                }
+            }
+        }
+    }
+}
