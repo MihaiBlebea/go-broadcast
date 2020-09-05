@@ -105,3 +105,8 @@ jobs:
         TF_VAR_pocket_access_token: ${{ secrets.POCKET_ACCESS_TOKEN }}
         TF_VAR_aws_domain_verification_token: ${{ secrets.AWS_DOMAIN_VERIFICATION_TOKEN }}
         TF_VAR_aws_domain_key_set: ${{ secrets.AWS_DOMAIN_KEY_SET }}
+        TF_VAR_list_image: serbanblebea/go-list:${{ github.sha }}
+        TF_VAR_google_credentials_file: ${{ secrets.GOOGLE_CREDENTIALS_FILE }}
+        TF_VAR_google_token_file: ${{ secrets.GOOGLE_TOKEN_FILE }}
+        TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
