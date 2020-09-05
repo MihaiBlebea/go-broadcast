@@ -2,7 +2,6 @@ package sender
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 )
@@ -16,8 +15,8 @@ type service struct {
 func New(region, from string) (Service, error) {
 	sess, err := session.NewSession(
 		&aws.Config{
-			Region:      aws.String(region),
-			Credentials: credentials.NewStaticCredentials("AKID", "SECRET_KEY", "TOKEN"),
+			Region: aws.String(region),
+			// Credentials: credentials.NewStaticCredentials("AKID", "SECRET_KEY", "TOKEN"),
 		},
 	)
 	if err != nil {
