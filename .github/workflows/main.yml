@@ -83,6 +83,8 @@ jobs:
         TF_VAR_list_image: serbanblebea/go-list:${{ github.sha }}
         TF_VAR_google_credentials_file: ${{ secrets.GOOGLE_CREDENTIALS_FILE }}
         TF_VAR_google_token_file: ${{ secrets.GOOGLE_TOKEN_FILE }}
+        TF_VAR_aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Terraform Apply
       working-directory: ./deploy/terraform

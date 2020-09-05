@@ -213,6 +213,14 @@ resource "kubernetes_deployment" "list-deployment" {
                         name  = "GOOGLE_TOKEN_FILE"
                         value = var.google_token_file
                     }
+                    env {
+                        name  = "AWS_ACCESS_KEY_ID"
+                        value = var.aws_access_key_id
+                    }
+                    env {
+                        name  = "AWS_SECRET_ACCESS_KEY"
+                        value = var.aws_secret_access_key
+                    }
                 }
             }
         }

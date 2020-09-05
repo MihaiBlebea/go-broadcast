@@ -43,3 +43,7 @@ variable "list_image" {}
 variable "google_credentials_file" {}
 
 variable "google_token_file" {}
+
+variable "aws_access_key_id" {}
+
+variable "aws_secret_access_key" {}
