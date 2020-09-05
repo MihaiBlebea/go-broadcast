@@ -55,7 +55,7 @@ func main() {
 	}
 	for _, con := range *contacts {
 		fmt.Println(con.Email)
-		in := sService.Build(con.Email, "<h1>This is an email</h1>", "Hello there!")
+		in := sService.Build("mihaiserban.blebea@gmail.com", "<h1>This is an email</h1>", "Hello there!")
 		out, err := sService.Send(in)
 		if err != nil {
 			logger.Error(err)
