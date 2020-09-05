@@ -38,6 +38,12 @@ variable "pocket_consumer_key" {}
 
 variable "pocket_access_token" {}
 
-# variable "certificate_id" {}
+variable "list_image" {}
 
-# variable "load_balancer_name" {}
+variable "google_credentials_file" {}
+
+variable "google_token_file" {}
+
+variable "aws_access_key_id" {}
+
+variable "aws_secret_access_key" {}

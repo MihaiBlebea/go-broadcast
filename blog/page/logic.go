@@ -43,9 +43,10 @@ func (s *service) LoadTemplate(URL string) (*Page, error) {
 
 	if URL == "/" {
 		template = "index"
+
 		posts, err := s.postService.GetAllPosts()
 		if err != nil {
-			return &Page{}, err
+			return s.loadErrorPage(err)
 		}
 
 		p := *posts
@@ -61,9 +62,10 @@ func (s *service) LoadTemplate(URL string) (*Page, error) {
 		}
 	} else if strings.Contains(URL, "/article") {
 		template = "article"
+
 		posts, err := s.postService.GetAllPosts()
 		if err != nil {
-			return &Page{}, err
+			return s.loadErrorPage(err)
 		}
 
 		slug := strings.Replace(URL, "/article/", "", -1)
@@ -87,7 +89,12 @@ func (s *service) LoadTemplate(URL string) (*Page, error) {
 		params = nil
 	}
 
-	return s.loadPage(template, params)
+	page, err := s.loadPage(template, params)
+	if err != nil {
+		return s.loadErrorPage(err)
+	}
+
+	return page, nil
 }
 
 func (s *service) loadPage(templateName string, params interface{}) (*Page, error) {
@@ -100,6 +107,23 @@ func (s *service) loadPage(templateName string, params interface{}) (*Page, erro
 		Params:       params,
 		Template:     tmpl,
 		TemplateName: templateName,
+	}, nil
+}
+
+func (s *service) loadErrorPage(err error) (*Page, error) {
+	tmpl, err := s.parseTemplates()
+	if err != nil {
+		return &Page{}, err
+	}
+
+	return &Page{
+		Params: struct {
+			Err string
+		}{
+			Err: err.Error(),
+		},
+		Template:     tmpl,
+		TemplateName: "error",
 	}, nil
 }
 

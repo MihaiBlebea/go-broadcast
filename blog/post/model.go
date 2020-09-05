@@ -89,3 +89,12 @@ func (p *Post) GetShareOnLinkedinLink() string {
 		p.Summary,
 	)
 }
+
+// IsDraft returns false if the publish date if before today
+func (p *Post) IsDraft() bool {
+	if p.Published.After(time.Now()) {
+		return true
+	}
+
+	return false
+}

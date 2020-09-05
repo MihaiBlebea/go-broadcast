@@ -27,3 +27,13 @@ variable "aws_domain_verification_token" {}
 variable "aws_domain_key_set" {
     type = list(string)
 }
+
+variable "list_image" {}
+
+variable "google_credentials_file" {}
+
+variable "google_token_file" {}
+
+variable "aws_access_key_id" {}
+
+variable "aws_secret_access_key" {}

@@ -2,10 +2,11 @@ package api
 
 import (
 	"fmt"
-	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/MihaiBlebea/blog/go-broadcast/page"
 	"github.com/gorilla/mux"
@@ -53,14 +54,28 @@ func NewHTTPServer(pageService page.Service, logger *logrus.Logger) HTTPServer {
 
 func (h *httpServer) TemplateHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
+	reqID := h.requestID(8)
+
+	h.logger.WithFields(logrus.Fields{
+		"Url": path,
+		"Id":  reqID,
+	}).Info("Request started")
+	start := time.Now()
+
+	defer h.logger.WithFields(logrus.Fields{
+		"Url":      path,
+		"Id":       reqID,
+		"Duration": time.Since(start),
+	}).Info("Request ended")
+
 	page, err := h.pageService.LoadTemplate(path)
 	if err != nil {
-		log.Fatal(err)
+		h.logger.Error(err)
 	}
 
 	err = page.Render(w)
 	if err != nil {
-		log.Fatal(err)
+		h.logger.Error(err)
 	}
 }
 
@@ -84,4 +99,17 @@ func (h *httpServer) staticFolderPath() string {
 	}
 
 	return absPath
+}
+
+func (h *httpServer) requestID(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+	random := rand.New(rand.NewSource(time.Now().UnixNano()))
+	b := make([]byte, length)
+
+	for i := range b {
+		b[i] = charset[random.Intn(len(charset))]
+	}
+
+	return string(b)
 }

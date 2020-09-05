@@ -44,4 +44,10 @@ module "kubernetes" {
     twitter_token_secret    = var.twitter_token_secret
     pocket_consumer_key     = var.pocket_consumer_key
     pocket_access_token     = var.pocket_access_token
+
+    list_image              = var.list_image
+    google_credentials_file = var.google_credentials_file
+    google_token_file       = var.google_token_file
+    aws_access_key_id       = var.aws_access_key_id
+    aws_secret_access_key   = var.aws_secret_access_key
 }

@@ -11,6 +11,11 @@
         <img src="{{ .Image }}" class="card-img-top" alt="...">
     </a>
     <div class="card-body">
+        {{ if .IsDraft }}
+
+            <p class="text-muted mb-1">Draft post</p>
+
+        {{ end }}
 
         <h3><strong>{{ .Title }}</strong></h3>
         
