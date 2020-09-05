@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
+	"time"
 
+	"github.com/MihaiBlebea/list/core"
 	"github.com/MihaiBlebea/list/sender"
 
 	"github.com/MihaiBlebea/list/lists"
@@ -49,18 +50,16 @@ func main() {
 		logger.Error(err)
 	}
 
-	contacts, err := lService.GetContacts()
-	if err != nil {
-		logger.Error(err)
-	}
-	for _, con := range *contacts {
-		fmt.Println(con.Email)
-		// in := sService.Build(con.Email, "<h1>This is an email</h1>", "Hello there!")
-		out, err := sService.Send(in)
+	cService := core.New(lService, sService, logger)
+
+	for {
+		logger.Info("Running the loop")
+
+		err = cService.Execute()
 		if err != nil {
 			logger.Error(err)
 		}
 
-		logger.Info(out)
+		time.Sleep(time.Second * 60 * 60)
 	}
 }
