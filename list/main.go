@@ -44,7 +44,7 @@ func main() {
 		logger.Error(err)
 	}
 
-	sService, err := sender.New("eu-west-2", "mihai@mihaiblebea.com")
+	sService, err := sender.New("eu-west-2", "mihaiserban.blebea@gmail.com")
 	if err != nil {
 		logger.Error(err)
 	}
