@@ -3,4 +3,3 @@ deploy/terraform/*.tfstate
 deploy/terraform/*.tfstate.backup
 deploy/terraform/modules/kubernetes/secrets
 broadcast/Makefile
-list/*.json
