@@ -47,3 +47,9 @@ variable "google_token_file" {}
 variable "aws_access_key_id" {}
 
 variable "aws_secret_access_key" {}
+
+variable "list_http_port" {
+    description = "http port for exposing the list service"
+
+    default = "8099"
+}

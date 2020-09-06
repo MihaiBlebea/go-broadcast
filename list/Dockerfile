@@ -28,5 +28,7 @@ WORKDIR /app
 
 COPY --from=build_base /tmp/go-sample-app/out/go-sample-app /app/list
 
+EXPOSE ${HTTP_PORT}
+
 # Run the binary program produced by `go install`
 CMD ["/app/list"]
