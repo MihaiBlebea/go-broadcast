@@ -156,6 +156,12 @@ html.transition *:after {
     border-radius: 5px;
 }
 
+.tag:hover {
+    background-color: #d83714;
+    text-decoration: none;
+    color: #fff;
+}
+
 .lead-box {
     background-color: #FFC300;
     color: #000;

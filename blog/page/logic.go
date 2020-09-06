@@ -92,6 +92,39 @@ func (s *service) LoadTemplate(URL string) (*Page, error) {
 			Articles: &relatedPosts,
 			Article:  &p,
 		}
+	} else if strings.Contains(URL, "/tag/") {
+		template = "index"
+
+		posts, err := s.postService.GetAllPosts()
+		if err != nil {
+			return s.loadErrorPage(err)
+		}
+
+		parts := strings.Split(strings.Replace(URL, "/tag/", "", -1), "/")
+		if len(parts) == 0 {
+			return s.loadErrorPage(err)
+		}
+
+		tag := parts[0]
+
+		var tagPosts []post.Post
+		for _, p := range *posts {
+			if contains(p.Tags, tag) == true {
+				tagPosts = append(tagPosts, p)
+			}
+		}
+
+		sort.SliceStable(tagPosts, func(i, j int) bool {
+			return tagPosts[i].Published.After(tagPosts[j].Published)
+		})
+
+		params = struct {
+			Articles *[]post.Post
+			Tag      string
+		}{
+			Articles: &tagPosts,
+			Tag:      tag,
+		}
 	} else {
 		template = strings.Split(URL[1:], "/")[0]
 		params = nil
@@ -153,4 +186,14 @@ func (s *service) parseTemplates() (*template.Template, error) {
 	}
 
 	return templ, nil
+}
+
+func contains(hay []string, needle string) bool {
+	for _, straw := range hay {
+		if straw == needle {
+			return true
+		}
+	}
+
+	return false
 }

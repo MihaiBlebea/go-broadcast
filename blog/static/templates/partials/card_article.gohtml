@@ -20,7 +20,7 @@
         <p>
             {{ range $tag := .Tags }}
 
-                <span class="mr-1 tag">#{{ $tag }}</span>
+                <a href="/tag/{{ $tag }}" class="mr-1 tag">#{{ $tag }}</a>
 
             {{ end }}
         </p>

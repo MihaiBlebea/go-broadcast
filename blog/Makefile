@@ -7,3 +7,7 @@ bundle:
 run:
 	export HTTP_PORT=8099 && \
 	go run .
+
+build:
+	export GOOS=linux && \ 
+	go build -o ./blog .
