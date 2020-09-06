@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"time"
 
@@ -55,10 +56,11 @@ func main() {
 	for {
 		logger.Info("Running the loop")
 
-		err = cService.Execute()
-		if err != nil {
-			logger.Error(err)
-		}
+		fmt.Println(cService)
+		// err = cService.Execute()
+		// if err != nil {
+		// 	logger.Error(err)
+		// }
 
 		time.Sleep(time.Second * 60 * 60)
 	}
