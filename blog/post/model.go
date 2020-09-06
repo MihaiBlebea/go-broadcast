@@ -92,7 +92,7 @@ func (p *Post) GetShareOnLinkedinLink() string {
 
 // IsDraft returns false if the publish date if before today
 func (p *Post) IsDraft() bool {
-	if p.Published.After(time.Now()) {
+	if p.Published.IsZero() {
 		return true
 	}
 

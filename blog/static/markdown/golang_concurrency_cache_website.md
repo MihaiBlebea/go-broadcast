@@ -6,10 +6,8 @@ Tags:
     - golang
     - cache
     - concurrency
-Layout: article
 Slug: golang-concurrent-multithreaded-server-with-cache
-Published: "2021-07-02 15:04:05"
-Kind: article
+# Published: 
 ---
 
 ## Step 1. Build a simple server with GO

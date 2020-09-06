@@ -7,10 +7,8 @@ Tags:
     - kubernetes
     - infrastructure
     - devops
-Layout: article
 Slug: terraform-with-kubernetes-infrastructure-as-code-part-1
 Published: "2020-08-12 10:04:05"
-Kind: article
 ---
 
 What is this infrastructure as code all about?
