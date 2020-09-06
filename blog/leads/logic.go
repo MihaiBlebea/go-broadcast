@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 )
 
 // Errors _
@@ -53,4 +54,12 @@ func (s *service) Save(name, email string) error {
 	}
 
 	return nil
+}
+
+func (s *service) FormatName(name string) string {
+	return strings.Title(name)
+}
+
+func (s *service) FormatEmail(email string) string {
+	return strings.ToLower(email)
 }
