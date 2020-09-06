@@ -50,6 +50,10 @@ resource "kubernetes_deployment" "blog-deployment" {
                         name  = "HTTP_PORT"
                         value = var.http_port
                     }
+                    env {
+                        name = "LIST_URL"
+                        value = "http://lists/lead"
+                    }
                     port {
                         container_port = var.http_port
                     }
@@ -236,7 +240,7 @@ resource "kubernetes_deployment" "list-deployment" {
 
 resource "kubernetes_service" "list_cluster_ip" {
     metadata {
-        name      = "list-service-cluster"
+        name      = "lists"
         namespace = "mihaiblebea"
     }
 
