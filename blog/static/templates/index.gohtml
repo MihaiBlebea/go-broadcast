@@ -10,7 +10,7 @@
     <div class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                {{ if .Params.Tag }}
+                {{ if (.IsSet "Tag") }}
 
                     <h1 class="mb-3">Blog</h1>
                     <h4 class="mb-4"><span class="tag">#{{ .Params.Tag }}</span> tag</h4>
