@@ -91,8 +91,12 @@ func (h *httpServer) TemplateHandler(w http.ResponseWriter, r *http.Request) {
 func (h *httpServer) PostLeadHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
-	name := r.Form.Get("name")
-	email := r.Form.Get("email")
+	name := h.leadService.FormatName(
+		r.Form.Get("name"),
+	)
+	email := h.leadService.FormatEmail(
+		r.Form.Get("email"),
+	)
 
 	path := r.URL.Path
 	reqID := h.requestID(8)
