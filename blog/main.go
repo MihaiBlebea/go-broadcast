@@ -7,6 +7,7 @@ import (
 
 	"github.com/MihaiBlebea/blog/go-broadcast/api"
 	"github.com/MihaiBlebea/blog/go-broadcast/cache"
+	"github.com/MihaiBlebea/blog/go-broadcast/leads"
 	"github.com/MihaiBlebea/blog/go-broadcast/page"
 	"github.com/MihaiBlebea/blog/go-broadcast/post"
 	"github.com/sirupsen/logrus"
@@ -22,7 +23,9 @@ func main() {
 	)
 	pageService := page.New(postService, cache, logger)
 
-	server := api.NewHTTPServer(pageService, logger)
+	leadService := leads.New(os.Getenv("LIST_URL"))
+
+	server := api.NewHTTPServer(pageService, leadService, logger)
 
 	httpPort := fmt.Sprintf(":%s", os.Getenv("HTTP_PORT"))
 	logger.Info(fmt.Sprintf("Application started HTTP server on port %s", httpPort))
