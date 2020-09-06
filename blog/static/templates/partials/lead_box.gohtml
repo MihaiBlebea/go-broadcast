@@ -1,0 +1,27 @@
+{{ define "lead_box" }}
+
+<div class="lead-box py-3 py-sm-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h4 class="mb-3">Get the latest updates</h4>
+            <p>I am going to publish posts and tutorials at a regular interval, but we all know how life can get in the way.</p>
+            <p>If you want to stay in touch and get all the latest content first, then you may consider subscribing to my awesome email list</p>
+            <p>Just add your details and join the inner circle.</p>
+        </div>
+        <div class="col-md-6 border-left-0 border-left-sm">
+            <form action="/leads" method="POST">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input name="name" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" type="email" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-block btn-primary">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ end }}

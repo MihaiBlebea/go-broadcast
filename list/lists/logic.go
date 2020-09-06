@@ -49,3 +49,22 @@ func (s *service) GetContacts() (*[]Contact, error) {
 
 	return &contacts, nil
 }
+
+func (s *service) AddContact(name, email string) error {
+	p := people.Person{}
+	p.Names = append(p.Names, &people.Name{
+		DisplayName: name,
+	})
+
+	p.EmailAddresses = append(p.EmailAddresses, &people.EmailAddress{
+		Value: email,
+	})
+
+	call := s.gService.People.CreateContact(&p)
+	_, err := call.Do()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

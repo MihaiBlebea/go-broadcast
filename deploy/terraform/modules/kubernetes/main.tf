@@ -12,6 +12,7 @@ resource "kubernetes_namespace" "mihaiblebea" {
     }
 }
 
+# blog microservice
 resource "kubernetes_deployment" "blog-deployment" {
     metadata {
         name      = "blog-deployment"
@@ -99,6 +100,7 @@ resource "kubernetes_service" "blog_cluster_ip" {
     }
 }
 
+# broadcast microservice
 resource "kubernetes_deployment" "broadcast-deployment" {
     metadata {
         name      = "broadcast-deployment"
@@ -172,6 +174,7 @@ resource "kubernetes_deployment" "broadcast-deployment" {
     }
 }
 
+# list microservice
 resource "kubernetes_deployment" "list-deployment" {
     metadata {
         name      = "list-deployment"
@@ -206,6 +209,10 @@ resource "kubernetes_deployment" "list-deployment" {
                     image = var.list_image
                     name  = "list-container"
                     env {
+                        name  = "HTTP_PORT"
+                        value = var.list_http_port
+                    }
+                    env {
                         name  = "GOOGLE_CREDENTIALS_FILE"
                         value = var.google_credentials_file
                     }
@@ -224,5 +231,25 @@ resource "kubernetes_deployment" "list-deployment" {
                 }
             }
         }
+    }
+}
+
+resource "kubernetes_service" "list_cluster_ip" {
+    metadata {
+        name      = "list-service-cluster"
+        namespace = "mihaiblebea"
+    }
+
+    spec {
+        selector = {
+            name = "list-pod"
+        }
+
+        port {
+            port        = 80
+            target_port = var.list_http_port
+        }
+
+        type = "ClusterIP"
     }
 }

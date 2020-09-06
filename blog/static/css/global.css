@@ -30,6 +30,7 @@ blockquote {
     padding-bottom: 70px;
     text-align: center;
     border-left: 20px solid #ff5733;
+    border-radius: .25rem;
 }
 
 blockquote::before {
@@ -55,6 +56,12 @@ blockquote::before {
 
 .text-article img {
     margin-bottom: 20px;
+}
+
+.text-article pre {
+    border-radius: .25rem;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .nav-link {
@@ -147,4 +154,22 @@ html.transition *:after {
     padding-left: 5px;
     padding-right: 5px;
     border-radius: 5px;
+}
+
+.lead-box {
+    background-color: #FFC300;
+    color: #000;
+    padding: 20px;
+    border-radius: .25rem;
+}
+
+.lead-box button {
+    background-color: #ff5733;
+    color: #FFF;
+    border-color: #ff5733;
+}
+
+.lead-box button:hover {
+    background-color: #d83714;
+    border-color: #d83714;
 }

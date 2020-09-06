@@ -25,7 +25,6 @@
     <meta property='twitter:url' content='https://mihaiblebea.com/article/{{ $article.Slug }}'/>
 
     <link rel="stylesheet" href="/static/css/footer-social.css"/>
-
 </head>
 <body>
     {{ template "navbar" }}
@@ -46,7 +45,11 @@
                 <img class="mb-3 w-100" src="{{ $article.Image }}" />
                 <p>Published {{ $article.GetFormatPublished }}</p>
 
-                <div class="text-article">{{ $article.HTML }}</div>
+                <div class="text-article mb-4">{{ $article.HTML }}</div>
+
+                <div class="mb-3">
+                    {{ template "lead_box" }}
+                </div>
 
                 <div id="disqus_thread"></div>
             </div>
@@ -108,7 +111,6 @@
 
         window.onscroll = function() { social.scrolling() }
     </script>
-
 
     {{ template "footer" }}
 </body>
