@@ -9,5 +9,4 @@ run:
 	go run .
 
 build:
-	export GOOS=linux && \ 
-	go build -o ./blog .
+	export GOOS=linux && go build -o ./blog .
