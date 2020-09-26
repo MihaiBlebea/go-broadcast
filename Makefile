@@ -12,6 +12,9 @@ open:
 
 build-up: local build up open
 
+watch:
+	cd ./blog && gowatcher
+
 build:
 	cd $(DOCKER_PATH) && docker-compose build --no-cache
 

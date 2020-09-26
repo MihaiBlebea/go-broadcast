@@ -43,7 +43,7 @@ Let's put that to the challenge.
 
 I will build this in incremental steps, giving you the ability to check how it works on every step of the way.
 
-So let's start by creating a folder `go-quiz` with a `main.go` file inside it:
+We will start by creating a folder `go-quiz` with a `main.go` file inside it:
 
 ```go
 package main
@@ -72,21 +72,20 @@ To finish the setup, just initialize the go module and install one single depend
 
 Now setup is finished, let's start writing our first code.
 
+## Read questions and answers from a yaml file
+
 The first iteration of the main function should look like this:
+
+**main.go:**
 
 ```go
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
-	"log"
-	"os"
-	"strings"
-	"time"
-
-	"github.com/MihaiBlebea/go-test/quiz"
+    "log"
+    "ioutil"
 )
 
 func main() {
@@ -98,7 +97,58 @@ func main() {
     // Read the external file.
     // Noticed that we de-referenced the file variable before using it
     // file is just the pointer to the string, will returns a memory address
-    // Use *file
+    // Returns b which is a slice of bytes
+	b, err := ioutil.ReadFile(*file)
+	if err != nil {
+		log.Fatal(err)
+    }
+}
+```
+It's time to have a look over what we just created.
+
+On lines 12 and 13 we are defining two flags that will capture arguments passed when we run this application. The two resulting variable will be pointer to string and pointer to integer, so if you print them out, you will get the addresses in memory of the variables that those two point to.
+
+Not very usefull. 
+
+To get the actual values, you will have to dereference those pointers first.
+
+You can use get the variable's value with `*file` and `*limit`.
+
+Next, we call `flag.Parse()` to parse those two flags. Don't foget to call that method after defining the flags.
+
+On line 20, we will use the value of file (path to file) to get the content of our *questions.yaml* file.
+
+We check for errors and handle them if any, and that's it for now.
+
+## Parse the yaml file to Go data structs
+
+**main.go:**
+
+```go
+package main
+
+import (
+	"flag"
+	"fmt"
+    "log"
+    "yaml"
+)
+
+// Quiz type to hold the list of problems
+type Quiz struct {
+	Problems []Problem `yaml:"problems"`
+}
+
+// Problem type with question and answer
+type Problem struct {
+	Question string `yaml:"question"`
+	Answer   string `yaml:"answer"`
+}
+
+func main() {
+    // Parse the flags here 
+    // ...
+
 	b, err := ioutil.ReadFile(*file)
 	if err != nil {
 		log.Fatal(err)
@@ -117,11 +167,31 @@ func main() {
     // ...
 }
 ```
+Line 11 to line 19, we define two new data structs.
+
+In Go, data is separated from the behaviour. If you look at languages like PHP, Node and Python, you notice that classes tend to contain data (attributes) and logic (methods), but not so much in Golang.
+
+I rejected this system when I first looked at this language, but after a while I started to see the benefits of this approach.
+
+It's much cleaner and from a coding perspective, it kind of makes sense.
+
+Of course, you can still attach methods to this structs, the struct becoming a "receiver" of the method, but we will talk about this a bit later.
+
+Another section that we added to the main.go file starts at line 31.
+
+We created an empty Quiz struct and passed it by reference into the `yaml.Unmarshal` method. This takes care of parsing the raw data that comes out as a slice of bytes from `ioutil.ReadFile()` and "populates" our struct with it.
+
+You will encounter this pattern a lot in Golang.
+
 If you run this, as it stands, you will get a log of the Quiz struct with the data from the yaml file.
 
 In the next iteration, we will start building the game loop witch will contain all our logic.
 
-To make this more readable, I have added a placeholder where the next code should go into in the main file.
+To make this more readable, I will replace the sections that we already built with placeholder comments to give you a better understanding of the big picture, but in the same time, keep this file short (and sweet 😃).
+
+## Build the game loop and get user inputs
+
+**main.go:**
 
 ```go
 package main
@@ -165,9 +235,31 @@ func main() {
 ```
 We are almost there...
 
-If you build this now, you can actually play a basic version of our quiz game. But we are not done with it.
+Let's take a look over what we added to the file.
+
+First we defined a variable `score` of type integer. Because we didn't assign any value to it at this point, it will take the default integer value, which is 0.
+
+Then, starting from line 14, we start looping over the questions in our quiz.
+
+First thing first, we will print a message to the user asking him the question.
+
+At line 18, we create a new Reader that get's the user's input from the console. It reads everything until it hits the "new line" character.
+
+If you compare the user answer at this point with the correct one from the quiz struct, you will always get a "Wrong" result. This is because the reader also includes the "new line" sign into the input.
+
+So at line 25, we trim those white spaces and new lines out of the user input.
+
+Next, we campare the answer with the correct one and print a message to the player. if correct, we also increment the score.
+
+Easy-peasy! 😃
+
+If you build this now, you can actually play a basic version of our quiz game. 
+
+But we are not done with it...
 
 It's time to add the timeout feature. 😃
+
+## Timeout feature and stoping the game
 
 But first, let's explore how the Go routines work.
 
@@ -188,6 +280,8 @@ We will add a new timer from the `time` standard package. This timer will use a 
 Let's implment this in our code.
 
 To make this easier to read, I will replace the rest of the code that we built until now with placeholder comments so you can se where everything should go (no pun intended) 😃.
+
+**main.go:**
 
 ```go
 package main
@@ -240,13 +334,15 @@ GameOver:
     fmt.Printf("Game over! Score is %d of %d\n", score, len(quiz.Problems))
 }
 ```
-You notice that we used a select to "listen" for event coming from the timer `C` channel. The arrow `<-` shows the direction of the data, flowing from the timer go-routine to the main go-routine.
+At line 13, we created a timer using the `time` package and set it up to expire after the `limit` variable that we get from the user at the start of the game.
 
-If the time expires, then we will break the select and the for loop and `goto` the GameOver tag at the bottom of the file.
+Next, at line 22 we added a select keywowrd to "listen" for event coming from the timer's `C` channel. The arrow `<-` shows the direction of the data, flowing from the timer go-routine to the main go-routine.
 
-This will display the score to the user.
+If the time expires, then we will "jump" to the GameOver tag, using the `goto` keyword.
 
-If you run everything now with `go run . -limit=5` and wait for 5 seconds you will notice that the time only expires when you press enter.
+This action, will skip the loop and display the score to the user.
+
+If you run everything now with `go run . -limit=5` and wait for 5 seconds you will notice that the timer only seems to expires when you press enter.
 
 This is happening because the block of code that reads the user input is actually blocking the main thread.
 
@@ -258,6 +354,8 @@ We will build a go-channel to communicate with this new go-routine and get the i
 
 Our final version of the main file will look like this:
 
+**main.go:**
+
 ```go
 package main
 
@@ -268,40 +366,49 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
-
-	"github.com/MihaiBlebea/go-test/quiz"
+    "time"
+    
+    "gopkg.in/yaml.v2"
 )
+
+// Quiz type
+type Quiz struct {
+	Problems []Problem `yaml:"problems"`
+}
+
+// Problem type
+type Problem struct {
+	Question string `yaml:"question"`
+	Answer   string `yaml:"answer"`
+}
 
 func main() {
 	file := flag.String("file", "questions.yaml", "File for questions")
 	limit := flag.Int("limit", 10, "Timeout limit in sec")
 	flag.Parse()
 
-	fmt.Println(*file, *limit)
-
-	q := quiz.Service{File: *file}
-	quiz, err := q.Parse()
+	var quiz Quiz
+	err = yaml.Unmarshal(b, &quiz)
 	if err != nil {
 		log.Fatal(err)
-	}
+    }
 
 	t := time.NewTimer(time.Duration(*limit) * time.Second)
 
 	var score int
 	for i, problem := range quiz.Problems {
-		fmt.Printf("Question %d: %s?\n", i+1, problem.Question)
-
+        fmt.Printf("Question %d: %s?\n", i+1, problem.Question)
+        
         // Create a type that accepts the input as string
         // And an error to be sent to the main thread
 		type Answer struct {
 			Input string
 			Err   error
-		}
-
+        }
+        
         // Create a channel of type Answer
-		answerChan := make(chan Answer)
-
+        answerChan := make(chan Answer)
+        
         // Our go routine that will handle the user input
 		go func() {
             // Move the reader inside the go routine
@@ -314,8 +421,8 @@ func main() {
 				answerChan <- Answer{
 					Err: err,
 				}
-			}
-
+            }
+            
             // Also send the user input through the channel
 			input = strings.TrimSpace(input)
 			answerChan <- Answer{
@@ -329,12 +436,11 @@ func main() {
         // Change the default case with this case that accepts the content of the channel
         // This will get triggered only if a message is coming through the channel from the go routine
 		case answer := <-answerChan:
-
             // handle the error if any from the channel
 			if answer.Err != nil {
 				log.Fatal(answer.Err)
-			}
-
+            }
+            
             // Same as before, handle the user input validation here
 			if answer.Input == problem.Answer {
 				fmt.Println("Correct")
@@ -349,11 +455,230 @@ GameOver:
 	fmt.Printf("Game over! Score is %d of %d\n", score, len(quiz.Problems))
 }
 ```
+At line 45 we define a type that we will use to specify what data type can be passed through our channel.
+
+The `Answer` type contains the user input as string and an error.
+
+Line 51, we created a channel of type `Answer`
+
+Then we used that channel in a new fancy go-groutine that we built from scratch as a closure.
+
+Notice how at line 62 and 69 we passed the data through the channel.
+
+Finally, at line 79, we have a new select case that accept and reads the data coming from the channel.
+
+We use that data to handle the errors and read the user input.
+
 This will be the final version of our go quiz game.
 
 If you run this again with `go run .` you will notice that if you don't answer the questions in the default limit of 10 sec, then you will be kicked out of the game and get the final score.
 
 This is the behaviour that we were expected to have.
 
+## Move everything from the main file to separate packages and have as little as possible logic inside the main file
 
+We want to create 3 separate packages:
 
+- game - this will hold the the game loop and most of the game logic
+
+- player - this will be a service to abstract the input and output to and from the player
+
+- quiz - this will be a package that will hold all logic to read the yaml file and parse to structs
+
+### Quiz package
+
+**quiz/model.go**
+
+```go
+package quiz
+
+import (
+	"io/ioutil"
+
+	"gopkg.in/yaml.v2"
+)
+
+// Quiz _
+type Quiz struct {
+	Problems []Problem `yaml:"problems"`
+}
+
+// Problem _
+type Problem struct {
+	Question string `yaml:"question"`
+	Answer   string `yaml:"answer"`
+}
+
+// New returns a new Quiz
+func New(fileName string) (*Quiz, error) {
+	b, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return &Quiz{}, err
+	}
+
+	var quiz Quiz
+	err = yaml.Unmarshal(b, &quiz)
+	if err != nil {
+		return &Quiz{}, err
+	}
+
+	return &quiz, nil
+}
+```
+
+### Game package
+
+**game/logic.go**
+
+```go
+package game
+
+import (
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/MihaiBlebea/go-quiz/quiz"
+)
+
+// Player interface
+type Player interface {
+	Print(string)
+	Input() (string, error)
+}
+
+type service struct {
+	limit  int
+	quiz   quiz.Quiz
+	player Player
+}
+
+// New _
+func New(limit int, quiz quiz.Quiz, player Player) Service {
+	return &service{limit, quiz, player}
+}
+
+func (s *service) Run() (int, error) {
+	t := time.NewTimer(time.Duration(s.limit) * time.Second)
+
+	var score int
+	for i, prob := range s.quiz.Problems {
+		s.player.Print(fmt.Sprintf("Problem %d: %s ?", i+1, prob.Question))
+
+		type Answer struct {
+			input string
+			err   error
+		}
+
+		answerChan := make(chan Answer)
+
+		go func() {
+			input, err := s.player.Input()
+			if err != nil {
+				answerChan <- Answer{
+					err: err,
+				}
+			}
+
+			input = strings.TrimSpace(input)
+
+			answerChan <- Answer{
+				input: input,
+			}
+		}()
+
+		select {
+		case <-t.C:
+			goto GameOver
+		case answer := <-answerChan:
+			if answer.err != nil {
+				return score, answer.err
+			}
+
+			if answer.input == prob.Answer {
+				s.player.Print("Correct\n")
+				score++
+			} else {
+				s.player.Print("Wrong\n")
+			}
+		}
+	}
+
+GameOver:
+	s.player.Print(fmt.Sprintf("Game over! Your score is %d from %d", score, len(s.quiz.Problems)))
+
+	return score, nil
+}
+```
+
+**game/service.go**
+
+```go
+package game
+
+// Service interface
+type Service interface {
+	Run() (int, error)
+}
+```
+
+### Player package
+
+**player/human.go:**
+
+```go
+package player
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+// Human player
+type Human struct {
+}
+
+// Print _
+func (h *Human) Print(output string) {
+	fmt.Println(output)
+}
+
+// Input _
+func (h *Human) Input() (string, error) {
+	reader := bufio.NewReader(os.Stdin)
+	return reader.ReadString('\n')
+}
+```
+
+**player/computer.go**
+
+```go
+package player
+
+import (
+	"fmt"
+)
+
+// Computer player
+type Computer struct {
+	Answers []string
+	counter int
+}
+
+// Print _
+func (c *Computer) Print(output string) {
+	fmt.Println(output)
+}
+
+// Input _
+func (c *Computer) Input() (string, error) {
+	defer c.incrementCounter()
+
+	return c.Answers[c.counter], nil
+}
+
+func (c *Computer) incrementCounter() {
+	c.counter++
+}
+```
