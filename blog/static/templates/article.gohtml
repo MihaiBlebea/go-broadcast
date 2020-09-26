@@ -43,7 +43,22 @@
                 </div>
 
                 <img class="mb-3 w-100" src="{{ $article.Image }}" />
-                <p>Published {{ $article.GetFormatPublished }}</p>
+
+                <!-- Article details section -->
+                <div class="row justify-content-between mb-3 mb-sm-4">
+                    <strong class="col-12 col-sm-6">Published {{ $article.GetFormatPublished }}</strong>
+
+                    <div class="col-12 col-sm-6 text-left text-sm-right">
+                        {{ range $tag := $article.Tags }}
+
+                            <a href="/tag/{{ $tag }}" class="tag mr-1">
+                                #{{ $tag }}
+                            </a>
+
+                        {{ end }}
+                    </div>
+                </div>
+                <!-- Article details section -->
 
                 <div class="text-article mb-4">{{ $article.HTML }}</div>
 
