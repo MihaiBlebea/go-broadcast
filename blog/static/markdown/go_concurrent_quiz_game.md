@@ -7,7 +7,7 @@ Tags:
     - go
     - goroutine
 Slug: go-concurrent-quiz-game
-# Published: "2020-08-27 10:04:05"
+Published: "2020-09-26 14:47:00"
 ---
 Coding a game is realy complicated...
 
