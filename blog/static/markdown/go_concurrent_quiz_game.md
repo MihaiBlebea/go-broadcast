@@ -277,6 +277,8 @@ In Go, this mechanism is called channel or go-channel.
 
 We will add a new timer from the `time` standard package. This timer will use a separate go-routine to count down and notify us when the time has expired via a go-channel.
 
+<img src="/static/svg/go_routines.svg" />
+
 Let's implment this in our code.
 
 To make this easier to read, I will replace the rest of the code that we built until now with placeholder comments so you can se where everything should go (no pun intended) 😃.
@@ -484,6 +486,24 @@ We want to create 3 separate packages:
 - player - this will be a service to abstract the input and output to and from the player
 
 - quiz - this will be a package that will hold all logic to read the yaml file and parse to structs
+
+Our folder structure is going to look like this:
+
+```
+|-- go-quiz //root folder
+    |-- game
+        |-- logic.ga
+        |-- service.go
+        |-- logic_test.go
+    |-- player
+        |-- human.go
+        |-- computer.go
+    |-- quiz
+        |-- logic.go
+        |-- service.go
+    |-- questions.yam
+    |-- main.go
+```
 
 ### Quiz package
 

@@ -10,10 +10,10 @@ open:
 
 # Docker scripts
 
-build-up: local build up open
+build-up: local build up open watch
 
 watch:
-	cd ./blog && gowatcher
+	cd ./blog && gowatcher --build="go build -o ./blog ."
 
 build:
 	cd $(DOCKER_PATH) && docker-compose build --no-cache
