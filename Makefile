@@ -10,7 +10,7 @@ open:
 
 # Docker scripts
 
-build-up: local build up open watch
+build-up: local build up open
 
 watch:
 	cd ./blog && gowatcher --build="go build -o ./blog ."

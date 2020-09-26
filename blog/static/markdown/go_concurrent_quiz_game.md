@@ -9,19 +9,19 @@ Tags:
 Slug: go-concurrent-quiz-game
 # Published: "2020-08-27 10:04:05"
 ---
-Coding a game must be sooooo complicated...
+Coding a game is realy complicated...
 
-This is what I used to tell myself when just started to code. 
+This is what I used to tell myself when I just started to code. 
 
-As time went by, I developed this habbit of always trying to code the same project when wanting to learn a new language.
+As time went by, I developed the habbit of always trying to code the same project when starting to learn a new language.
 
-You might have already notice that every coding course starts with a "Hello world" or "To do list" app.
+You might have already notice that every coding course starts with a "Hello world" or "To do list" demo app.
 
-I have chosen the Quiz game as it gives me the chance to compare more features across different languages.
+I have chosen the Quiz game as it gives me the chance to compare the same features across different languages.
 
 For example, implementing a timeout timer in PHP might be more difficult then doing it in Go. But how much more difficult?
 
-Let's give it a run...
+Let's give it a go... 😃
 
 We will be starting this from an empty folder and we'll use a couple of waypoints to guilde us through the process:
 
@@ -477,7 +477,7 @@ If you run this again with `go run .` you will notice that if you don't answer t
 
 This is the behaviour that we were expected to have.
 
-## Move everything from the main file to separate packages and have as little as possible logic inside the main file
+## Structure application into packages
 
 We want to create 3 separate packages:
 
@@ -503,9 +503,17 @@ Our folder structure is going to look like this:
         |-- service.go
     |-- questions.yam
     |-- main.go
+    |-- go.sum
+    |-- go.mod
 ```
 
 ### Quiz package
+
+The main responsability of the **quiz package** will be to fetch the data from the source (yaml file) and parse it to golang structures.
+
+We will move the Quiz and Problem structs inside this package and expose them to be used by the other packages.
+
+The New method will accept a file path as parameter and return a pointer to a Quiz struct and an error.
 
 **quiz/model.go**
 
@@ -547,6 +555,24 @@ func New(fileName string) (*Quiz, error) {
 ```
 
 ### Game package
+
+We will move all the logic of the game, including the game loop, inside this package.
+
+A service struct will contain the timer limit, the quiz struct and the player.
+
+From the perspective of this package, the Player is just an interface that require two methods to be implemented:
+
+- Print() to display a message to to player
+
+- Input() to get information from the player
+
+The Run() method on the service struct will run the game loop. Notice that we replaced the `fmt.Println()` with `service.player.Print()`.
+
+Also, we replaced the logic that reads user input with `service.player.Input()`.
+
+We did this, because we want to abstract the player of the game, and to allow different types of player to play. For example, a ComputerPlayer can implement the Player interface and play the game.
+
+I told you that computers are going to take over the world... but maybe not yet.
 
 **game/logic.go**
 
@@ -631,6 +657,8 @@ GameOver:
 }
 ```
 
+We also added a Service interface to abstract the implementation of the game.
+
 **game/service.go**
 
 ```go
@@ -643,6 +671,10 @@ type Service interface {
 ```
 
 ### Player package
+
+The player package defines the two types of players that can play this game, Human and Computer.
+
+Notice that both of these structs implement the interface Player from the game package so they can be easily passed as a player when creating a new game.
 
 **player/human.go:**
 
@@ -702,3 +734,60 @@ func (c *Computer) incrementCounter() {
 	c.counter++
 }
 ```
+
+Now that we structed our application into packages, we have a much more flexible solution.
+
+We could easily replace the players of the game, maybe extract the quiz from a json file or even change how the game loop works without affecting the other parts of the application.
+
+Also, now that we separated the logic based on responsability, we could add tests.
+
+We will talk about Golang test in another article...
+
+This is awesome! We have 3 new packages that we can push to github and require them  as dependencies to the main app if we really wanted to.
+
+We are missing just one single file...
+
+The main.go file.
+
+As you noticed, we abstracted as much logic as possible and now, our main file should be just a couple of lines of code that instantiate some services and pass them around.
+
+**main.go:**
+
+```go
+package main
+
+import (
+	"flag"
+	"log"
+
+	"github.com/MihaiBlebea/go-quiz/game"
+	"github.com/MihaiBlebea/go-quiz/player"
+	"github.com/MihaiBlebea/go-quiz/quiz"
+)
+
+func main() {
+	fileName := flag.String("file", "problems.yaml", "The name of the file with the problems")
+	limit := flag.Int("limit", 10, "The time limit for the quiz in seconds")
+	flag.Parse()
+
+	quiz, err := quiz.New(*fileName)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	player := player.Human{}
+	// player := player.Computer{Answers: []string{"London", "15"}}
+
+	gameService := game.New(*limit, *quiz, &player)
+	_, err = gameService.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+Notice how we are left with just 30 lines of code in our main file, and I am sure we could go even lower then that...
+
+If you want to see the complete code, please check the <a href="https://github.com/MihaiBlebea/go-quiz" taget="_blank">Github repo link here</a>.
+
+Let me know if you have any suggestions in the comments section below.

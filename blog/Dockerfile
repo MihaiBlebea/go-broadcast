@@ -33,5 +33,7 @@ COPY ./static /app/static
 
 EXPOSE ${HTTP_PORT}
 
+RUN chmod +x /app/blog
+
 # Run the binary program produced by `go install`
 CMD ["/app/blog"]
