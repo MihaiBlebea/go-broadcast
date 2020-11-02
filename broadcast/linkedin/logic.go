@@ -99,7 +99,7 @@ func (s *service) createNewPayload(article Article) ([]byte, error) {
 	specificContent["com.linkedin.ugc.ShareContent"] = shareContent
 
 	visibility := make(map[string]string)
-	visibility["com.linkedin.ugc.MemberNetworkVisibility"] = "CONNECTIONS"
+	visibility["com.linkedin.ugc.MemberNetworkVisibility"] = "PUBLIC"
 
 	payload["author"] = linkedinUserID
 	payload["lifecycleState"] = "PUBLISHED"
